@@ -76,8 +76,19 @@ graph LR
     style D fill:#ff4444,stroke:#333,stroke-width:2px,color:#fff
     style G fill:#ff8800,stroke:#333,stroke-width:2px,color:#fff
 ```
-
 </div>
+
+## ✓ Play
+<div align="center" style="width:100%; margin:0;">
+  <a href="add/infinity.mp4" title="전체 영상 보기" style="display:block; width:100%;">
+    <img
+      src="add/infinity.gif"
+      alt="InfinityFighter gameplay preview (GIF)"
+      style="display:block; width:100%; height:auto; border-radius:16px;" />
+  </a>
+</div>
+<hr style="margin:16px 0; border:none; border-top:1px solid #e5e7eb;">
+
 
 ## Development Summary (Prototype → Alpha → Beta)
 
@@ -109,6 +120,7 @@ graph LR
     </td>
   </tr>
 
+  
   <!-- PROBLEM -->
   <tr><td style="background-color:#fff2e8; border:1px solid #f0d6c5;"><strong>🟡 PROBLEM</strong></td></tr>
   <tr>
