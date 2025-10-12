@@ -79,15 +79,16 @@ graph LR
 </div>
 
 ## ✓ Play
+<br>
+
+[시연 영상🔗](https://drive.google.com/file/d/10M_CN8pmrWdWcnFWV2D6hW02CXI8klad/view?usp=drive_link)  
+
 <div align="center" style="width:100%; margin:0;">
   <a href="add/infinity.mp4" title="전체 영상 보기" style="display:block; width:100%;">
     <img
       src="add/infinity.gif"
       alt="InfinityFighter gameplay preview (GIF)"
       style="display:block; width:100%; height:auto; border-radius:16px;" />
-    <br>
-
-[시연 영상🔗](https://drive.google.com/file/d/10M_CN8pmrWdWcnFWV2D6hW02CXI8klad/view?usp=drive_link)  
   </a>
 </div>
 <hr style="margin:16px 0; border:none; border-top:1px solid #e5e7eb;">
