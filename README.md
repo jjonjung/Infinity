@@ -88,6 +88,9 @@ graph LR
   </a>
 </div>
 <hr style="margin:16px 0; border:none; border-top:1px solid #e5e7eb;">
+<br>
+
+[시연 영상🔗](https://drive.google.com/file/d/10M_CN8pmrWdWcnFWV2D6hW02CXI8klad/view?usp=drive_link)  
 
 
 ## Development Summary (Prototype → Alpha → Beta)
