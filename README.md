@@ -5,7 +5,7 @@
 <table border="0" cellspacing="0" cellpadding="8" style="width: 100%; table-layout: fixed;">
   <tr>
     <td style="width: 20%; padding: 8px;"><strong>Project Name</strong></td>
-    <td style="padding: 8px;">InfinityFighter - 마블 히어로 배틀 시뮬레이터</td>
+    <td style="padding: 8px;">InfinityShooting - 마블 히어로 배틀 시뮬레이터</td>
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Duration</strong></td>
