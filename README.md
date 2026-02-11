@@ -1,4 +1,4 @@
-# InfinityFighter
+# InfinityShooting
 ## ✓ Project Overview
 <div align="center">
 
@@ -9,11 +9,11 @@
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Duration</strong></td>
-    <td style="padding: 8px;">Development in Progress</td>
+    <td style="padding: 8px;">2025.09.08 ~ 2025.09.24</td>
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Team Size</strong></td>
-    <td style="padding: 8px;">Team Development</td>
+    <td style="padding: 8px;">3인</td>
   </tr>
   <tr>
     <td style="padding: 8px;"><strong>Engine</strong></td>
