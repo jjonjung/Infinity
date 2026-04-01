@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ─── 필터 정의 ────────────────────────────────── -->
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Packet">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560002}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DB">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Auth">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Infrastructure">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Match">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560009}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560010}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Admin">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestClient">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560012}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestClient\Application">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\TestClient\Transport">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Bootstrap">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560019}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Packet">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DB">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Auth">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Infrastructure">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560014}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Match">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Shared">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Admin">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestClient">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestClient\Application">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560023}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\TestClient\Transport">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560024}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Bootstrap">
+      <UniqueIdentifier>{B1C2D3E4-F5A6-7890-ABCD-EF1234560020}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+
+  <!-- ─── 소스 파일 배치 ───────────────────────────── -->
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Network\Server.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Network\Session.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Packet\PacketHandler.cpp">
+      <Filter>Source Files\Packet</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DB\DBConnector.cpp">
+      <Filter>Source Files\DB</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Auth\Application\AuthService.cpp">
+      <Filter>Source Files\Auth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\Cache\RedisCache.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\Repositories\UserRepository.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Infrastructure\Repositories\MatchRepository.cpp">
+      <Filter>Source Files\Infrastructure</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Match\Application\MatchResultDispatcher.cpp">
+      <Filter>Source Files\Match</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shared\Config\ServerConfig.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shared\Logging\Logger.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Admin\Application\AdminMonitoringService.cpp">
+      <Filter>Source Files\Admin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TestClient\TestScenarioCatalog.cpp">
+      <Filter>Source Files\TestClient</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TestClient\Application\TestClientService.cpp">
+      <Filter>Source Files\TestClient\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TestClient\Application\TestScenarioRunner.cpp">
+      <Filter>Source Files\TestClient\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TestClient\Transport\TestClientConnection.cpp">
+      <Filter>Source Files\TestClient\Transport</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Bootstrap\ServerRuntime.cpp">
+      <Filter>Source Files\Bootstrap</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shared\Security\TokenService.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shared\Security\PasswordHasher.cpp">
+      <Filter>Source Files\Shared</Filter>
+    </ClCompile>
+  </ItemGroup>
+
+  <!-- ─── 헤더 파일 배치 ───────────────────────────── -->
+  <ItemGroup>
+    <ClInclude Include="src\Network\Server.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Network\Session.h">
+      <Filter>Header Files\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Packet\Packet.h">
+      <Filter>Header Files\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Packet\PacketHandler.h">
+      <Filter>Header Files\Packet</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DB\DBConnector.h">
+      <Filter>Header Files\DB</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Auth\Application\AuthService.h">
+      <Filter>Header Files\Auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Auth\Domain\AuthenticatedUser.h">
+      <Filter>Header Files\Auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Auth\Domain\LoginProvider.h">
+      <Filter>Header Files\Auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Infrastructure\Cache\RedisCache.h">
+      <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Infrastructure\Repositories\UserRepository.h">
+      <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Infrastructure\Repositories\MatchRepository.h">
+      <Filter>Header Files\Infrastructure</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Match\Application\MatchResultDispatcher.h">
+      <Filter>Header Files\Match</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shared\Config\ServerConfig.h">
+      <Filter>Header Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shared\Logging\Logger.h">
+      <Filter>Header Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shared\Types\ServiceResult.h">
+      <Filter>Header Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Admin\Application\AdminMonitoringService.h">
+      <Filter>Header Files\Admin</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestClient\TestScenarioCatalog.h">
+      <Filter>Header Files\TestClient</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestClient\Application\TestClientModels.h">
+      <Filter>Header Files\TestClient\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestClient\Application\TestClientService.h">
+      <Filter>Header Files\TestClient\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestClient\Application\TestScenarioRunner.h">
+      <Filter>Header Files\TestClient\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TestClient\Transport\TestClientConnection.h">
+      <Filter>Header Files\TestClient\Transport</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Bootstrap\ServerRuntime.h">
+      <Filter>Header Files\Bootstrap</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shared\Security\TokenService.h">
+      <Filter>Header Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shared\Security\PasswordHasher.h">
+      <Filter>Header Files\Shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+
+</Project>

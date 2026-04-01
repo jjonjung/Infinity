@@ -49,6 +49,8 @@ public :
     void StopRewindMode();
 
 private:
+    void PushSnapshot(const FDoctorStrangeSkillSaveData& SaveData);
+
     // Internal rewind state (per-character)
     bool bIsRewinding = false;
     FTransform rewindStartTransform;

@@ -38,6 +38,12 @@ public:
     UFUNCTION(BlueprintCallable)
     void ClearAllKillLogs();
 
+    UFUNCTION(BlueprintPure, Category="Battle|Query")
+    const TArray<FString>& GetRecentKillLogs() const { return KillLogs; }
+
+    UFUNCTION(BlueprintPure, Category="Battle|Query")
+    int32 GetHeroKillCount(FName HeroNickname) const;
+
 	
 	// 스코어보드 UI 갱신 트리거 (BP에서 구현 권장)
 	UFUNCTION(BlueprintCallable)
@@ -60,7 +66,15 @@ protected:
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
+    void TrimKillLogs();
+
     // 최근 킬 로그 문자열 목록 (간단한 킬피드 용)
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Battle", meta=(AllowPrivateAccess="true"))
     TArray<FString> KillLogs;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Battle", meta=(AllowPrivateAccess="true"))
+    TMap<FName, int32> HeroKillCounts;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Battle", meta=(AllowPrivateAccess="true", ClampMin="1"))
+    int32 MaxKillLogs = 5;
 };

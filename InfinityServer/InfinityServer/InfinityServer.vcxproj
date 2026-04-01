@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- ─── 구성 목록 ─────────────────────────────── -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <!-- ─── 전역 속성 ───────────────────────────────── -->
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <RootNamespace>InfinityServer</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <!-- ─── Debug|x64 ──────────────────────────────── -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"
+                 Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+
+  <!-- ─── Release|x64 ─────────────────────────────── -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'"
+                 Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+
+  <ImportGroup Label="PropertySheets"
+               Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets"
+               Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
+            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <MySqlConnectorRoot Condition="'$(MySqlConnectorRoot)'==''">$(MYSQL_CONNECTOR_CPP_DIR)</MySqlConnectorRoot>
+  </PropertyGroup>
+
+  <!-- ─── Debug|x64 컴파일·링크 옵션 ───────────────── -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(MySqlConnectorRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>ws2_32.lib;mysqlcppconn8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MySqlConnectorRoot)\lib64\vs14;$(MySqlConnectorRoot)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- ─── Release|x64 컴파일·링크 옵션 ────────────── -->
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(MySqlConnectorRoot)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WIN64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>ws2_32.lib;mysqlcppconn8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MySqlConnectorRoot)\lib64\vs14;$(MySqlConnectorRoot)\lib64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- ─── 소스 파일 ──────────────────────────────── -->
+  <ItemGroup>
+    <ClCompile Include="src\Bootstrap\ServerRuntime.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Admin\Application\AdminMonitoringService.cpp" />
+    <ClCompile Include="src\Auth\Application\AuthService.cpp" />
+    <ClCompile Include="src\Infrastructure\Cache\RedisCache.cpp" />
+    <ClCompile Include="src\Infrastructure\Repositories\MatchRepository.cpp" />
+    <ClCompile Include="src\Infrastructure\Repositories\UserRepository.cpp" />
+    <ClCompile Include="src\Match\Application\MatchResultDispatcher.cpp" />
+    <ClCompile Include="src\Network\Server.cpp" />
+    <ClCompile Include="src\Network\Session.cpp" />
+    <ClCompile Include="src\Packet\PacketHandler.cpp" />
+    <ClCompile Include="src\Shared\Config\ServerConfig.cpp" />
+    <ClCompile Include="src\Shared\Logging\Logger.cpp" />
+    <ClCompile Include="src\Shared\Security\PasswordHasher.cpp" />
+    <ClCompile Include="src\Shared\Security\TokenService.cpp" />
+    <ClCompile Include="src\TestClient\Application\TestClientService.cpp" />
+    <ClCompile Include="src\TestClient\Application\TestScenarioRunner.cpp" />
+    <ClCompile Include="src\TestClient\Transport\TestClientConnection.cpp" />
+    <ClCompile Include="src\TestClient\TestScenarioCatalog.cpp" />
+    <ClCompile Include="src\DB\DBConnector.cpp" />
+  </ItemGroup>
+
+  <!-- ─── 헤더 파일 ──────────────────────────────── -->
+  <ItemGroup>
+    <ClInclude Include="src\Bootstrap\ServerRuntime.h" />
+    <ClInclude Include="src\Admin\Application\AdminMonitoringService.h" />
+    <ClInclude Include="src\Auth\Application\AuthService.h" />
+    <ClInclude Include="src\Auth\Domain\AuthenticatedUser.h" />
+    <ClInclude Include="src\Auth\Domain\LoginProvider.h" />
+    <ClInclude Include="src\Infrastructure\Cache\RedisCache.h" />
+    <ClInclude Include="src\Infrastructure\Repositories\MatchRepository.h" />
+    <ClInclude Include="src\Infrastructure\Repositories\UserRepository.h" />
+    <ClInclude Include="src\Match\Application\MatchResultDispatcher.h" />
+    <ClInclude Include="src\Network\Server.h" />
+    <ClInclude Include="src\Network\Session.h" />
+    <ClInclude Include="src\Packet\Packet.h" />
+    <ClInclude Include="src\Packet\PacketHandler.h" />
+    <ClInclude Include="src\Shared\Config\ServerConfig.h" />
+    <ClInclude Include="src\Shared\Logging\Logger.h" />
+    <ClInclude Include="src\Shared\Security\PasswordHasher.h" />
+    <ClInclude Include="src\Shared\Security\TokenService.h" />
+    <ClInclude Include="src\Shared\Types\ServiceResult.h" />
+    <ClInclude Include="src\TestClient\Application\TestClientModels.h" />
+    <ClInclude Include="src\TestClient\Application\TestClientService.h" />
+    <ClInclude Include="src\TestClient\Application\TestScenarioRunner.h" />
+    <ClInclude Include="src\TestClient\Transport\TestClientConnection.h" />
+    <ClInclude Include="src\TestClient\TestScenarioCatalog.h" />
+    <ClInclude Include="src\DB\DBConnector.h" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+
+</Project>

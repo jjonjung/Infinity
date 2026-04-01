@@ -21,7 +21,7 @@ void AMyDoctorStrange::SaveSkillData(FTransform PastTransform, int32 pastHp)
 	FDoctorStrangeSkillSaveData saveData;
 	saveData.PastTransform = PastTransform;
 	saveData.SavedHp=pastHp;
-	timeDatas.PushBack(saveData);
+	PushSnapshot(saveData);
 	//GEngine->AddOnScreenDebugMessage(-1,1.f,FColor::Black,TEXT("세이브 데이터 추가"));
 	
 }
@@ -48,19 +48,14 @@ void AMyDoctorStrange::ClearQueue()
 
 void AMyDoctorStrange::SaveDataAtTime()
 {
-    if (CanSaveTime)
+    if (!CanSaveTime || !ActionStatComp)
     {
-        if (timeDatas.Num()<= maxSavedFrames)
-        {
-            FTransform saveTransform = GetActorTransform();
-            int32 saveHP = ActionStatComp->Get_CurrentHp();
-            SaveSkillData(saveTransform,saveHP);
-            return;
-        }
+        return;
     }
-    
-    RemoveOldData();
-    
+
+    FTransform saveTransform = GetActorTransform();
+    int32 saveHP = ActionStatComp->Get_CurrentHp();
+    SaveSkillData(saveTransform,saveHP);
 }
 
 void AMyDoctorStrange::StopSaveTime()
@@ -79,6 +74,21 @@ void AMyDoctorStrange::StartSaveData()
 {
     CanSaveTime = true;
     GetWorldTimerManager().SetTimer(skillTimerHandle,this,&AMyDoctorStrange::SaveDataAtTime, saveInterval, true);
+}
+
+void AMyDoctorStrange::PushSnapshot(const FDoctorStrangeSkillSaveData& SaveData)
+{
+    if (maxSavedFrames <= 0)
+    {
+        return;
+    }
+
+    while (timeDatas.Num() >= maxSavedFrames)
+    {
+        RemoveOldData();
+    }
+
+    timeDatas.PushBack(SaveData);
 }
 
 

@@ -99,6 +99,13 @@ void ABattleManager::AddKillLog(const FString& KillerName, const FString& Victim
     }
     const FString Line = FString::Printf(TEXT("[%s] %s -> %s  (K:%d D:%d)"), TeamTag, *KillerName, *VictimName, KillerKills, KillerDeaths);
     KillLogs.Add(Line);
+    TrimKillLogs();
+
+    if (!KillerName.IsEmpty() && KillerName != TEXT("<Unknown>"))
+    {
+        const FName KillerKey(*KillerName);
+        HeroKillCounts.FindOrAdd(KillerKey)++;
+    }
 
     FColor Color = FColor::White;
     switch (KillerTeam)
@@ -134,6 +141,30 @@ void ABattleManager::AddKillLog(const FString& KillerName, const FString& Victim
 void ABattleManager::ClearAllKillLogs()
 {
     KillLogs.Reset();
+    HeroKillCounts.Reset();
+}
+
+int32 ABattleManager::GetHeroKillCount(FName HeroNickname) const
+{
+    if (const int32* FoundCount = HeroKillCounts.Find(HeroNickname))
+    {
+        return *FoundCount;
+    }
+
+    return 0;
+}
+
+void ABattleManager::TrimKillLogs()
+{
+    if (MaxKillLogs <= 0)
+    {
+        return;
+    }
+
+    while (KillLogs.Num() > MaxKillLogs)
+    {
+        KillLogs.RemoveAt(0);
+    }
 }
 
 void ABattleManager::UpdateScoreboard()
