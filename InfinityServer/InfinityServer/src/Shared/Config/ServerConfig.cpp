@@ -6,19 +6,34 @@ namespace
 {
 std::string ReadEnvOrDefault(const char* name, const std::string& fallback)
 {
-    const char* value = std::getenv(name);
-    return (value != nullptr && value[0] != '\0') ? value : fallback;
+    char* value = nullptr;
+    std::size_t length = 0;
+    const errno_t result = _dupenv_s(&value, &length, name);
+    if (result != 0 || value == nullptr || value[0] == '\0')
+    {
+        free(value);
+        return fallback;
+    }
+
+    std::string resolvedValue(value);
+    free(value);
+    return resolvedValue;
 }
 
 uint16_t ReadEnvPortOrDefault(const char* name, uint16_t fallback)
 {
-    const char* value = std::getenv(name);
-    if (value == nullptr || value[0] == '\0')
+    char* value = nullptr;
+    std::size_t length = 0;
+    const errno_t result = _dupenv_s(&value, &length, name);
+    if (result != 0 || value == nullptr || value[0] == '\0')
     {
+        free(value);
         return fallback;
     }
 
-    return static_cast<uint16_t>(std::strtoul(value, nullptr, 10));
+    const auto port = static_cast<uint16_t>(std::strtoul(value, nullptr, 10));
+    free(value);
+    return port;
 }
 }
 

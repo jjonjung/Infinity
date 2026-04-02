@@ -18,8 +18,7 @@ void CopyString(char* target, size_t targetSize, const std::string& source)
         return;
     }
 
-    std::strncpy(target, source.c_str(), targetSize - 1);
-    target[targetSize - 1] = '\0';
+    strncpy_s(target, targetSize, source.c_str(), _TRUNCATE);
 }
 
 void SendLoginFailure(Session& session, const std::string& message)

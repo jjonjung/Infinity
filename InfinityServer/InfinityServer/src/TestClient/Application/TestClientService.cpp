@@ -13,8 +13,7 @@ void CopyToFixed(char* target, size_t size, const std::string& value)
         return;
     }
 
-    std::strncpy(target, value.c_str(), size - 1);
-    target[size - 1] = '\0';
+    strncpy_s(target, size, value.c_str(), _TRUNCATE);
 }
 
 ClientOperationResult ToLoginResult(const LoginResBody& response)

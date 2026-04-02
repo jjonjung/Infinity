@@ -12,7 +12,7 @@ std::unique_ptr<ServerRuntime> GRuntime;
 
 void ServerRuntime::Initialize(const ServerConfig& config)
 {
-    GRuntime = std::make_unique<ServerRuntime>(config);
+    GRuntime.reset(new ServerRuntime(config));
 }
 
 ServerRuntime& ServerRuntime::Get()
