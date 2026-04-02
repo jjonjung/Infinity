@@ -75,6 +75,8 @@ protected:
 private:
 	class AMyIronMan* IronManOwner;
 	FTimerHandle SkillTimerHandle;
+	TArray<FHitResult> CachedHitResults;
+	TSet<TWeakObjectPtr<AActor>> HitActorsThisShot;
 
 	// 스킬 실행 함수들
 	UFUNCTION()

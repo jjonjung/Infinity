@@ -177,7 +177,10 @@ void USkill1_IronMan::PerformRepulsorRaycast()
     FVector RepulsorDirection = GetRepulsorDirection();
 
     // 두 손에서 레이캐스트 수행
-    TArray<FVector> HandLocations = {LeftHandLocation, RightHandLocation};
+    const FVector HandLocations[2] = { LeftHandLocation, RightHandLocation };
+    HitActorsThisShot.Reset();
+    CachedHitResults.Reset();
+    CachedHitResults.Reserve(8);
 
     for (const FVector& HandLocation : HandLocations)
     {
@@ -190,9 +193,9 @@ void USkill1_IronMan::PerformRepulsorRaycast()
         QueryParams.bReturnPhysicalMaterial = true;
 
         // 스피어 스윕 레이캐스트 (빔 두께 시뮬레이션)
-        TArray<FHitResult> HitResults;
+        CachedHitResults.Reset();
         bool bHit = GetWorld()->SweepMultiByChannel(
-            HitResults,
+            CachedHitResults,
             HandLocation,
             EndLocation,
             FQuat::Identity,
@@ -203,13 +206,20 @@ void USkill1_IronMan::PerformRepulsorRaycast()
 
         if (bHit)
         {
-            for (const FHitResult& Hit : HitResults)
+            for (const FHitResult& Hit : CachedHitResults)
             {
                 AActor* HitActor = Hit.GetActor();
                 if (!HitActor || HitActor == IronManOwner)
                 {
                     continue;
                 }
+
+                const TWeakObjectPtr<AActor> HitActorKey(HitActor);
+                if (HitActorsThisShot.Contains(HitActorKey))
+                {
+                    continue;
+                }
+                HitActorsThisShot.Add(HitActorKey);
 
                 // 거리 상관없이 최대 힘 전달 (리펄서는 에너지 빔)
                 float Distance = FVector::Dist(HandLocation, Hit.Location);

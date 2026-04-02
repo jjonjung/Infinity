@@ -151,6 +151,7 @@ bool USkill1_SpiderManSwing::FindSwingTarget(ACharacterBase* Owner, FVector& Out
 	if (!World) return false;
 
 	FVector StartLocation = Owner->GetActorLocation();
+
 	FVector ForwardDirection = Owner->GetActorForwardVector();
 
 	// 적을 찾아보기 (적 끌어오기 우선)
@@ -165,6 +166,7 @@ bool USkill1_SpiderManSwing::FindSwingTarget(ACharacterBase* Owner, FVector& Out
 
 	// 여러 방향으로 레이캐스트 시도 (벽 붙기용)
 	TArray<FVector> SearchDirections;
+	SearchDirections.Reserve(6);
 
 	// 앞쪽, 위쪽, 대각선 방향들
 	SearchDirections.Add(ForwardDirection); // 바로 앞
@@ -265,7 +267,7 @@ void USkill1_SpiderManSwing::StartSwinging(ACharacterBase* Owner)
 	CurrentRopeLength = FVector::Dist(Owner->GetActorLocation(), SwingAnchorPoint);
 
 	// 공격한 액터 목록 초기화
-	HitActors.Empty();
+	HitActors.Reset();
 
 	// 땅에 있다면 점프하여 공중으로 이동
 	if (Owner->GetCharacterMovement()->IsMovingOnGround())
@@ -421,7 +423,7 @@ void USkill1_SpiderManSwing::EndSwinging(ACharacterBase* Owner)
 	DestroyWebLine();
 
 	// 웹 라인 메시들 제거
-	DestroyWebLineMeshes();
+	// Reuse previously created mesh components instead of recreating them every activation.
 
 	// 타이머 정리
 	if (UWorld* World = Owner->GetWorld())
@@ -490,12 +492,13 @@ void USkill1_SpiderManSwing::CheckSwingAttack(ACharacterBase* Owner)
 	FVector OwnerLocation = Owner->GetActorLocation();
 
 	// 구체 충돌 체크
-	TArray<FOverlapResult> OverlapResults;
+	CachedOverlapResults.Reset();
+	CachedOverlapResults.Reserve(16);
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(Owner);
 
 	bool bHit = World->OverlapMultiByChannel(
-		OverlapResults,
+		CachedOverlapResults,
 		OwnerLocation,
 		FQuat::Identity,
 		ECC_Pawn,
@@ -505,19 +508,20 @@ void USkill1_SpiderManSwing::CheckSwingAttack(ACharacterBase* Owner)
 
 	if (bHit)
 	{
-		for (const FOverlapResult& Result : OverlapResults)
+		for (const FOverlapResult& Result : CachedOverlapResults)
 		{
-			/*if (ACharacterBase* Target = Cast<ACharacterBase>(Result.GetActor()))
+			if (ACharacterBase* Target = Cast<ACharacterBase>(Result.GetActor()))
 			{
 				// 이미 공격한 타겟이 아니고, 공격 가능한 타겟인지 확인
-				if (!HitActors.Contains(Target) && CanAttackTarget(Owner, Target))
+				const TWeakObjectPtr<AActor> TargetKey(Target);
+				if (!HitActors.Contains(TargetKey) && CanAttackTarget(Owner, Target))
 				{
 					PerformSwingAttack(Owner, Target);
-					HitActors.Add(Target);
+					HitActors.Add(TargetKey);
 
 					UE_LOG(LogTemp, Warning, TEXT("스윙 공격 적중: %s"), *Target->GetName());
 				}
-			}*/
+			}
 		}
 	}
 
@@ -772,6 +776,7 @@ void USkill1_SpiderManSwing::CreateWebLineMeshes(ACharacterBase* Owner)
 	FVector StartLocation = Owner->GetActorLocation();
 
 	// 메시 컴포넌트들 생성
+	WebLineMeshComponents.Reserve(FMath::Max(WebLineMeshComponents.Num(), MeshSegmentCount));
 	for (int32 i = 1; i <= MeshSegmentCount; ++i)
 	{
 		// 각 메시의 위치 계산
