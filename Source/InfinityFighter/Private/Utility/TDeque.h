@@ -1,6 +1,7 @@
 ﻿// TDequeUE.h
 #pragma once
 #include "CoreMinimal.h"
+#include "Misc/Optional.h"
 
 /**
  * Unreal-style lightweight deque (double-ended queue)
@@ -8,7 +9,8 @@
  * - pop_back / pop_front  (bool 반환)
  * - operator[] 임의 접근 (0 = 앞(front))
  * - Front()/Back(), Num(), IsEmpty(), Clear()
- * 내부는 TArray 를 링버퍼처럼 사용.
+ * 내부는 TArray<TOptional<T>> 를 링버퍼처럼 사용.
+ * 비어 있는 슬롯은 T 를 생성하지 않으므로 capacity 만큼의 기본 생성 비용을 피한다.
  */
 template<typename T>
 class TDeque
@@ -17,7 +19,7 @@ public:
     TDeque(int32 InCapacity = 8)
     {
         Capacity = FMath::Max(8, InCapacity);
-        Data.SetNum(Capacity);   // default construct
+        Data.SetNum(Capacity);   // create optional slots only; T itself is constructed on push
         Head = 0;
         Count = 0;
     }
@@ -31,12 +33,16 @@ public:
     FORCEINLINE T& operator[](int32 Index)
     {
         checkf(Index >= 0 && Index < Count, TEXT("TDequeUE::operator[] index out of range"));
-        return Data[PhysIndex(Index)];
+        TOptional<T>& Slot = Data[PhysIndex(Index)];
+        checkf(Slot.IsSet(), TEXT("TDequeUE::operator[] accessed empty slot"));
+        return Slot.GetValue();
     }
     FORCEINLINE const T& operator[](int32 Index) const
     {
         checkf(Index >= 0 && Index < Count, TEXT("TDequeUE::operator[] index out of range"));
-        return Data[PhysIndex(Index)];
+        const TOptional<T>& Slot = Data[PhysIndex(Index)];
+        checkf(Slot.IsSet(), TEXT("TDequeUE::operator[] accessed empty slot"));
+        return Slot.GetValue();
     }
 
     // 맨 앞/뒤 참조
@@ -50,14 +56,14 @@ public:
     {
         EnsureCapacity(Count + 1);
         const int32 Tail = PhysIndex(Count); // write at back
-        Data[Tail] = Value;
+        Data[Tail].Emplace(Value);
         ++Count;
     }
     void PushBack(T&& Value)
     {
         EnsureCapacity(Count + 1);
         const int32 Tail = PhysIndex(Count);
-        Data[Tail] = MoveTemp(Value);
+        Data[Tail].Emplace(MoveTemp(Value));
         ++Count;
     }
 
@@ -66,14 +72,14 @@ public:
     {
         EnsureCapacity(Count + 1);
         Head = PrevIndex(Head);
-        Data[Head] = Value;
+        Data[Head].Emplace(Value);
         ++Count;
     }
     void PushFront(T&& Value)
     {
         EnsureCapacity(Count + 1);
         Head = PrevIndex(Head);
-        Data[Head] = MoveTemp(Value);
+        Data[Head].Emplace(MoveTemp(Value));
         ++Count;
     }
 
@@ -81,7 +87,10 @@ public:
     bool PopFront(T& OutItem)
     {
         if (IsEmpty()) return false;
-        OutItem = MoveTemp(Data[Head]);
+        TOptional<T>& Slot = Data[Head];
+        checkf(Slot.IsSet(), TEXT("TDequeUE::PopFront encountered empty slot"));
+        OutItem = MoveTemp(Slot.GetValue());
+        Slot.Reset();
         Head = NextIndex(Head);
         --Count;
         return true;
@@ -92,7 +101,10 @@ public:
     {
         if (IsEmpty()) return false;
         const int32 Tail = PhysIndex(Count - 1);
-        OutItem = MoveTemp(Data[Tail]);
+        TOptional<T>& Slot = Data[Tail];
+        checkf(Slot.IsSet(), TEXT("TDequeUE::PopBack encountered empty slot"));
+        OutItem = MoveTemp(Slot.GetValue());
+        Slot.Reset();
         --Count;
         return true;
     }
@@ -100,6 +112,10 @@ public:
     // 싹 비우기 (메모리는 유지)
     void Clear()
     {
+        for (int32 i = 0; i < Count; ++i)
+        {
+            Data[PhysIndex(i)].Reset();
+        }
         Head = 0;
         Count = 0;
     }
@@ -115,7 +131,7 @@ public:
     }
 
 private:
-    TArray<T> Data;
+    TArray<TOptional<T>> Data;
     int32 Capacity = 0;
     int32 Head = 0;     // 논리적 0번(Front)이 놓이는 물리 인덱스
     int32 Count = 0;
@@ -136,13 +152,15 @@ private:
         int32 NewCap = FMath::Max(8, Capacity * 2);
         while (NewCap < Needed) NewCap *= 2;
 
-        TArray<T> NewData;
+        TArray<TOptional<T>> NewData;
         NewData.SetNum(NewCap);
 
         // 0..Count-1 순서로 재배치
         for (int32 i = 0; i < Count; ++i)
         {
-            NewData[i] = MoveTemp((*this)[i]);
+            const int32 OldIndex = PhysIndex(i);
+            checkf(Data[OldIndex].IsSet(), TEXT("TDequeUE::EnsureCapacity encountered empty slot"));
+            NewData[i] = MoveTemp(Data[OldIndex]);
         }
         Data = MoveTemp(NewData);
         Capacity = NewCap;

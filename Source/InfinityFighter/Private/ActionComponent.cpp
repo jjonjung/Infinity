@@ -23,13 +23,15 @@ void UActionComponent::Register(FName Tag, UActionBase* Action)
 {
 	if (Tag.IsNone() || !Action) return;
 
+	ResetRuntimeState(Tag);
+
 	if (Actions.Contains(Tag))
 	{
 		UE_LOG(LogTemp,Warning,TEXT("이미 같은 액션이 들어왔습니다. %s"),*Tag.ToString());
 	}
 	UE_LOG(LogTemp,Warning,TEXT("등록한다! %s"),*Tag.ToString());
 	Action -> SetActionTag(Tag);
-	Actions.Add(Tag,Action);
+	Actions.Add(Tag, Action);
 		
 }
 
@@ -113,6 +115,26 @@ void UActionComponent::BeginPlay()
 	
 }
 
+void UActionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	for (TPair<FName, FActionRuntimeState>& Pair : RuntimeStates)
+	{
+		Pair.Value.Reset(GetWorld());
+	}
+
+	RuntimeStates.Empty();
+
+	for (const TPair<FName, TObjectPtr<UActionBase>>& Pair : Actions)
+	{
+		if (UActionBase* Action = Pair.Value)
+		{
+			Action->MarkIdle();
+		}
+	}
+
+	Super::EndPlay(EndPlayReason);
+}
+
 
 // Called every frame
 void UActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -166,55 +188,75 @@ float UActionComponent::GetCoolDownRemaining(FName Tag) const
 //그 액션이 끝나면 쿨타임을 진행시키는 함수 
 void UActionComponent::StartCooldown(FName Tag, UActionBase* Action, float Seconds)
 {
-	if (!Action || Seconds <= 0.f) { return; }
+	if (!Action || Seconds <= 0.f)
+	{
+		return;
+	}
 
-	// 상태 전이
-	Action->MarkCooldown(Seconds);
-	// 남은 시간 갱신(정보용)
-	Action->SetCooldownRemaining(Seconds);
+	if (UWorld* World = GetWorld())
+	{
+		ResetRuntimeState(Tag);
 
-	// 1초마다 남은 시간 감소를 업데이트하고, 마지막에 해제
-	FTimerHandle& Handle = CoolDownTimers.FindOrAdd(Tag);
+		Action->MarkCooldown(Seconds);
+		Action->SetCooldownRemaining(Seconds);
 
-	// 남은 시간 틱 다운
-	GetWorld()->GetTimerManager().SetTimer(
-		Handle,
-		FTimerDelegate::CreateWeakLambda(this, [this, Tag]()
-		{
-			if (UActionBase* A = Actions.FindRef(Tag))
+		FActionRuntimeState NewRuntimeState;
+		FTimerManager& TimerManager = World->GetTimerManager();
+
+		TimerManager.SetTimer(
+			NewRuntimeState.CooldownTickHandle,
+			FTimerDelegate::CreateWeakLambda(this, [this, Tag, Action, Seconds]()
 			{
-				const float NewRemain = FMath::Max(0.f, A->GetCooldownRemaining() - 1.f);
-				A->SetCooldownRemaining(NewRemain);
-			}
-		}),
-		1.0f, true  // 반복
-	);
+				TickCooldownRemaining(Tag, Action, Seconds);
+			}),
+			1.0f, true
+		);
 
-	// 쿨다운 종료 타이머(단발)
-	FTimerHandle EndHandle;
-	GetWorld()->GetTimerManager().SetTimer(
-		EndHandle,
-		FTimerDelegate::CreateWeakLambda(this, [this, Tag, Action]()
-		{
-			// 반복 타이머 정리
-			if (FTimerHandle* H = CoolDownTimers.Find(Tag))
+		TimerManager.SetTimer(
+			NewRuntimeState.CooldownEndHandle,
+			FTimerDelegate::CreateWeakLambda(this, [this, Tag, Action]()
 			{
-				GetWorld()->GetTimerManager().ClearTimer(*H);
-				CoolDownTimers.Remove(Tag);
-			}
-			// 상태 Idle로 복귀
-			ClearCooldown(Tag, Action);
-		}),
-		Seconds, false
-	);
+				ClearCooldown(Tag, Action);
+			}),
+			Seconds, false
+		);
+
+		RuntimeStates.Add(Tag, MoveTemp(NewRuntimeState));
+	}
 }
 
 //액션과 tag 정보를 이용하여 쿨다운을 초기화 하는 함수 
 void UActionComponent::ClearCooldown(FName Tag, UActionBase* Action)
 {
 	if (!Action) return;
+	ResetRuntimeState(Tag);
 	Action->MarkIdle();
 	// 필요하면 여기서 "쿨다운 종료" 이벤트를 추가로 방송할 수 있음
+}
+
+void UActionComponent::TickCooldownRemaining(FName Tag, UActionBase* Action, float Seconds)
+{
+	if (!Action)
+	{
+		return;
+	}
+
+	const float NewRemain = FMath::Clamp(Action->GetCooldownRemaining() - 1.f, 0.f, Seconds);
+	Action->SetCooldownRemaining(NewRemain);
+
+	if (NewRemain <= 0.f)
+	{
+		ResetRuntimeState(Tag);
+	}
+}
+
+void UActionComponent::ResetRuntimeState(FName Tag)
+{
+	if (FActionRuntimeState* RuntimeState = RuntimeStates.Find(Tag))
+	{
+		RuntimeState->Reset(GetWorld());
+		RuntimeStates.Remove(Tag);
+	}
 }
 
 //액션이 종료할때 실행하는 함수  쿨타임이 따로 없는 함수면 바로 idle(실행가능상태) 아니라면 쿨타임을 진행 시킨다. 

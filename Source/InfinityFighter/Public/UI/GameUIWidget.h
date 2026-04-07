@@ -10,6 +10,7 @@
 #include "GameUIWidget.generated.h"
 
 class UGameTimerWidget;
+class UMinimapWidget;
 
 UCLASS()
 class INFINITYFIGHTER_API UGameUIWidget : public UUserWidget
@@ -19,7 +20,10 @@ class INFINITYFIGHTER_API UGameUIWidget : public UUserWidget
 public:
     UPROPERTY(meta=(BindWidgetOptional))
     TObjectPtr<UGameTimerWidget> TimerWidget;
-    
+
+    UPROPERTY(meta=(BindWidgetOptional))
+    TObjectPtr<UMinimapWidget> MinimapWidget;
+
     // 타이머 업데이트 함수
     void UpdateTimer(float NewTime);
 

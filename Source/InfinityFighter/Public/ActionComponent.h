@@ -6,6 +6,28 @@
 #include "Components/ActorComponent.h"
 #include "ActionComponent.generated.h"
 
+USTRUCT()
+struct FActionRuntimeState
+{
+	GENERATED_BODY()
+
+	FTimerHandle CooldownTickHandle;
+	FTimerHandle CooldownEndHandle;
+
+	void Reset(UWorld* World)
+	{
+		if (World)
+		{
+			FTimerManager& TimerManager = World->GetTimerManager();
+			TimerManager.ClearTimer(CooldownTickHandle);
+			TimerManager.ClearTimer(CooldownEndHandle);
+		}
+
+		CooldownTickHandle.Invalidate();
+		CooldownEndHandle.Invalidate();
+	}
+};
+
 class UActionBase;
 /** 액션 실행 이벤트(UX/HUD/로그용) */
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnActionEvent, FName /*Tag*/, UActionBase* /*Action*/);
@@ -41,16 +63,19 @@ public :
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	UPROPERTY(EditAnywhere,Instanced,Instanced,Category="Action")
-	TMap<FName,UActionBase*> Actions;
+	TMap<FName, TObjectPtr<UActionBase>> Actions;
 
 private:
-	TMap<FName,FTimerHandle> CoolDownTimers;
+	UPROPERTY(Transient)
+	TMap<FName, FActionRuntimeState> RuntimeStates;
 
 	/** 내부 유틸: 쿨다운 시작/해제/남은 시간 갱신 */
 	void StartCooldown(FName Tag, UActionBase* Action, float Seconds);
 	void ClearCooldown(FName Tag, UActionBase* Action);
 	void TickCooldownRemaining(FName Tag, UActionBase* Action, float Seconds);
+	void ResetRuntimeState(FName Tag);
 
 	/** 액션 종료 공통 처리(즉시 종료형에서 사용) */
 public:

@@ -276,12 +276,12 @@ void ACharacterBase::InitActionsFromLoadout()
 	
 	for (const FActionSlot& Slot : ActionLoadOutDA->Actions)
 	{
-		UActionBase* Action = NewObject<UActionBase>(ActionComponent, Slot.ActionClass);
-
-		FString NameString = Action->GetFName().ToString();
-		UE_LOG(LogTemp, Warning, TEXT(" Name: %s"), *this->GetFName().ToString());
-
-		UE_LOG(LogTemp, Warning, TEXT("Action Name: %s"), *NameString);
+		UActionBase* Action = ActionComponent->CreateAndRegister(Slot.ActionClass, Slot.ActionTag);
+		if (!Action)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to create action for tag %s"), *Slot.ActionTag.ToString());
+			continue;
+		}
 		
 		Action->SetActionMontage(Slot.Montage);
 		
@@ -289,8 +289,6 @@ void ACharacterBase::InitActionsFromLoadout()
 		{
 			Action->SetCooldown(Slot.CooldownSec);
 		}
-		
-		ActionComponent->Register(Slot.ActionTag,Action); // 매니저에 등록(즉 그 캐릭터가 할 수 있는 액션(점프,스킬,발사 등)을 읽어서 등록해준다.
 	}
 }
 
