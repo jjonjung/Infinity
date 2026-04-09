@@ -62,6 +62,20 @@ struct ClientPlayerStats
     int TotalDamageDealt = 0;
 };
 
+struct ClientMonitoringNode
+{
+    std::string Name;
+    bool Healthy = false;
+};
+
+struct ClientMonitoringSnapshot
+{
+    int ActiveMatchCount = 0;
+    int ConnectedSessionCount = 0;
+    int CachedLeaderboardEntryCount = 0;
+    std::vector<ClientMonitoringNode> Nodes;
+};
+
 struct ClientOperationResult
 {
     bool Success = false;
@@ -70,6 +84,7 @@ struct ClientOperationResult
     std::string Message;
     ClientLoginTokens Tokens;
     ClientPlayerStats Stats;
+    ClientMonitoringSnapshot Monitoring;
 };
 
 struct TestScenarioExecution

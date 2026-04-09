@@ -16,6 +16,7 @@ std::vector<TestScenarioExecution> TestScenarioRunner::RunDefaultRegression(cons
     executions.push_back(RunSocialLogin("google", "google-dev-token"));
     executions.push_back(RunSocialLogin("steam", "steam-dev-ticket"));
     executions.push_back(RunMatchAndStats(userId));
+    executions.push_back(RunMonitoringSnapshot());
     return executions;
 }
 
@@ -96,5 +97,16 @@ TestScenarioExecution TestScenarioRunner::RunMatchAndStats(int64_t userId)
     const auto statsResult = m_service.QueryPlayerStats(userId);
     execution.Success = statsResult.Success;
     execution.Message = statsResult.Message;
+    return execution;
+}
+
+TestScenarioExecution TestScenarioRunner::RunMonitoringSnapshot()
+{
+    TestScenarioExecution execution;
+    execution.Name = "admin-monitoring";
+
+    const auto result = m_service.QueryMonitoringSnapshot();
+    execution.Success = result.Success;
+    execution.Message = result.Message;
     return execution;
 }

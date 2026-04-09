@@ -14,6 +14,7 @@ ServiceResult<VoidValue> MatchRepository::PersistMatchResult(const PersistMatchR
     match.ExternalMatchId = request.MatchId;
     match.WinnerTeam = request.WinnerTeam;
     match.PlayerCount = request.PlayerCount;
+    match.Players.reserve(request.Players.size());
 
     for (const MatchPlayerResult& player : request.Players)
     {

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\EJ\Desktop\Fork\Infinity\tools\TcpUdpSimulator\tests\PacketParserTests.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\EJ\Desktop\Fork\Infinity\tools\TcpUdpSimulator\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{B31107F1-B51D-3732-A996-B9FEC26759AC}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

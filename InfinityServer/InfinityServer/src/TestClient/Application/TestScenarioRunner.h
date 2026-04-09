@@ -17,6 +17,7 @@ private:
     TestScenarioExecution RunValidateGameSession(const std::string& gameToken);
     TestScenarioExecution RunSocialLogin(const std::string& provider, const std::string& token);
     TestScenarioExecution RunMatchAndStats(int64_t userId);
+    TestScenarioExecution RunMonitoringSnapshot();
 
     TestClientService& m_service;
 };

@@ -223,6 +223,40 @@ ClientOperationResult TestClientService::QueryPlayerStats(int64_t userId)
     return result;
 }
 
+ClientOperationResult TestClientService::QueryMonitoringSnapshot()
+{
+    ClientOperationResult result;
+    std::string errorMessage;
+    if (!m_connection.SendPacket(OP_ADMIN_MONITORING_REQ, nullptr, 0, errorMessage))
+    {
+        result.Message = errorMessage;
+        return result;
+    }
+
+    AdminMonitoringResBody response{};
+    if (!ReceiveTypedPacket(OP_ADMIN_MONITORING_RES, response, errorMessage))
+    {
+        result.Message = errorMessage;
+        return result;
+    }
+
+    result.Success = response.result == 0;
+    result.Message = response.message;
+    result.Monitoring.ActiveMatchCount = response.active_match_count;
+    result.Monitoring.ConnectedSessionCount = response.connected_session_count;
+    result.Monitoring.CachedLeaderboardEntryCount = response.cached_leaderboard_entry_count;
+
+    for (int index = 0; index < response.node_count && index < 4; ++index)
+    {
+        result.Monitoring.Nodes.push_back({
+            response.nodes[index].name,
+            response.nodes[index].healthy != 0
+        });
+    }
+
+    return result;
+}
+
 template <typename TResponse>
 bool TestClientService::ReceiveTypedPacket(uint16_t expectedOpcode, TResponse& response, std::string& errorMessage)
 {
@@ -253,3 +287,4 @@ template bool TestClientService::ReceiveTypedPacket<RegisterResBody>(uint16_t, R
 template bool TestClientService::ReceiveTypedPacket<ValidateGameTokenResBody>(uint16_t, ValidateGameTokenResBody&, std::string&);
 template bool TestClientService::ReceiveTypedPacket<MatchResultResBody>(uint16_t, MatchResultResBody&, std::string&);
 template bool TestClientService::ReceiveTypedPacket<PlayerStatsResBody>(uint16_t, PlayerStatsResBody&, std::string&);
+template bool TestClientService::ReceiveTypedPacket<AdminMonitoringResBody>(uint16_t, AdminMonitoringResBody&, std::string&);

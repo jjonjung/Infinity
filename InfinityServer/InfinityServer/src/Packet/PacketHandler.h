@@ -17,4 +17,5 @@ private:
     static void OnValidateGameTokenReq(Session& session, const char* body, uint16_t bodySize);
     static void OnMatchResultReq(Session& session, const char* body, uint16_t bodySize);
     static void OnPlayerStatsReq(Session& session, const char* body, uint16_t bodySize);
+    static void OnAdminMonitoringReq(Session& session, const char* body, uint16_t bodySize);
 };

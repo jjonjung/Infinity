@@ -42,6 +42,12 @@ void CMfcTestClientMainDialog::OnBnClickedConnect()
 
     const bool connected = m_service.Connect(CT2A(host), static_cast<uint16_t>(_ttoi(portText)), errorMessage);
     AppendLog(connected ? _T("Connected to server") : CString(errorMessage.c_str()));
+
+    if (connected)
+    {
+        const auto monitoring = m_service.QueryMonitoringSnapshot();
+        RenderResult(monitoring);
+    }
 }
 
 void CMfcTestClientMainDialog::OnBnClickedRegister()
@@ -180,5 +186,24 @@ void CMfcTestClientMainDialog::RenderResult(const ClientOperationResult& result)
                          result.Stats.TotalAssists,
                          result.Stats.TotalDamageDealt);
         AppendLog(statsLine);
+    }
+
+    if (!result.Monitoring.Nodes.empty() || result.Monitoring.ActiveMatchCount > 0 || result.Monitoring.ConnectedSessionCount > 0)
+    {
+        CString monitoringLine;
+        monitoringLine.Format(_T("monitoring matches=%d sessions=%d leaderboard=%d"),
+                              result.Monitoring.ActiveMatchCount,
+                              result.Monitoring.ConnectedSessionCount,
+                              result.Monitoring.CachedLeaderboardEntryCount);
+        AppendLog(monitoringLine);
+
+        for (const auto& node : result.Monitoring.Nodes)
+        {
+            CString nodeLine;
+            nodeLine.Format(_T("node %s healthy=%d"),
+                            CString(node.Name.c_str()),
+                            node.Healthy ? 1 : 0);
+            AppendLog(nodeLine);
+        }
     }
 }

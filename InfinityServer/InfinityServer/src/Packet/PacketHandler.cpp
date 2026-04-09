@@ -65,6 +65,9 @@ void PacketHandler::Handle(Session& session, uint16_t opcode,
     case OP_PLAYER_STATS_REQ:
         OnPlayerStatsReq(session, body, bodySize);
         break;
+    case OP_ADMIN_MONITORING_REQ:
+        OnAdminMonitoringReq(session, body, bodySize);
+        break;
     default:
         Logger::Write(LogLevel::Warning, "packet", "unknown opcode received");
         break;
@@ -237,6 +240,7 @@ void PacketHandler::OnMatchResultReq(Session& session, const char* body, uint16_
         persistRequest.MatchId = req.match_id;
         persistRequest.WinnerTeam = req.winner_team;
         persistRequest.PlayerCount = req.player_count;
+        persistRequest.Players.reserve(req.player_count > 4 ? 4 : req.player_count);
 
         for (int index = 0; index < req.player_count && index < 4; ++index)
         {
@@ -313,4 +317,32 @@ void PacketHandler::OnPlayerStatsReq(Session& session, const char* body, uint16_
     session.SendPacket(OP_PLAYER_STATS_RES,
                        reinterpret_cast<const char*>(&res),
                        static_cast<uint16_t>(sizeof(PlayerStatsResBody)));
+}
+
+void PacketHandler::OnAdminMonitoringReq(Session& session, const char* body, uint16_t bodySize)
+{
+    (void)body;
+    (void)bodySize;
+
+    AdminMonitoringResBody res{};
+    const auto snapshot = ServerRuntime::Get().GetAdminMonitoringService().BuildSnapshot();
+
+    res.result = 0;
+    res.active_match_count = snapshot.ActiveMatchCount;
+    res.connected_session_count = snapshot.ConnectedSessionCount;
+    res.cached_leaderboard_entry_count = snapshot.CachedLeaderboardEntryCount;
+    res.node_count = static_cast<int32_t>(snapshot.Nodes.size() > 4 ? 4 : snapshot.Nodes.size());
+    CopyString(res.message, sizeof(res.message), "monitoring snapshot ok");
+
+    for (int index = 0; index < res.node_count; ++index)
+    {
+        CopyString(res.nodes[index].name,
+                   sizeof(res.nodes[index].name),
+                   snapshot.Nodes[index].Name);
+        res.nodes[index].healthy = snapshot.Nodes[index].Healthy ? 1 : 0;
+    }
+
+    session.SendPacket(OP_ADMIN_MONITORING_RES,
+                       reinterpret_cast<const char*>(&res),
+                       static_cast<uint16_t>(sizeof(AdminMonitoringResBody)));
 }

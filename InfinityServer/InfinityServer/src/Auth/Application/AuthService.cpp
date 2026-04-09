@@ -91,7 +91,9 @@ AuthResponse AuthService::BuildAuthResponse(const AuthenticatedUser& user) const
     response.Tokens.AccessToken = m_tokenService.IssueAccessToken(user.UserId);
     response.Tokens.RefreshToken = m_tokenService.IssueRefreshToken(user.UserId);
     response.Tokens.GameSessionToken = m_tokenService.IssueGameSessionToken(user.UserId);
-    m_redisCache.StoreGameSessionToken(response.Tokens.GameSessionToken, user.UserId);
+    m_redisCache.CacheUserSession(user.UserId,
+                                  response.Tokens.RefreshToken,
+                                  response.Tokens.GameSessionToken);
     DBConnector::Get().SaveSession({ user.UserId, response.Tokens.RefreshToken, response.Tokens.GameSessionToken });
     return response;
 }

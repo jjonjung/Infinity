@@ -16,6 +16,7 @@ struct MonitoringSnapshot
     std::vector<MonitoringNodeStatus> Nodes;
     int ActiveMatchCount = 0;
     int ConnectedSessionCount = 0;
+    int CachedLeaderboardEntryCount = 0;
 };
 
 class AdminMonitoringService

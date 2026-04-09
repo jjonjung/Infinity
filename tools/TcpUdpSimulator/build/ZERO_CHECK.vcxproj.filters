@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\EJ\Desktop\Fork\Infinity\tools\TcpUdpSimulator\build\CMakeFiles\c4b5b31e8ba5d7623908255a0a5ac246\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{4D0BEFEC-B008-33C8-88B9-7830C42367B2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

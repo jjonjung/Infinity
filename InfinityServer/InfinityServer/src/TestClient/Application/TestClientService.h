@@ -19,6 +19,7 @@ public:
     ClientOperationResult ValidateGameSession(const std::string& gameSessionToken);
     ClientOperationResult SubmitMatchResult(const ClientMatchRequest& request);
     ClientOperationResult QueryPlayerStats(int64_t userId);
+    ClientOperationResult QueryMonitoringSnapshot();
 
 private:
     template <typename TResponse>

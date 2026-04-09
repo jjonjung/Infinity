@@ -1,9 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <chrono>
+#include <map>
 #include <memory>
 #include <mutex>
 #include <optional>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
@@ -95,6 +98,18 @@ public:
     std::optional<DbPlayerAggregate> GetAggregateForUser(int64_t userId) const;
 
 private:
+    struct StoredUser
+    {
+        DbUser User;
+        std::vector<DbIdentity> Identities;
+    };
+
+    struct StoredSession
+    {
+        DbSession Session;
+        std::chrono::system_clock::time_point CreatedAt;
+    };
+
     DBConnector();
     ~DBConnector() = default;
     DBConnector(const DBConnector&) = delete;
@@ -109,6 +124,8 @@ private:
                                              const std::string& providerUserId,
                                              bool verifyPassword,
                                              const std::string& plainPassword) const;
+    std::optional<DbUser> FindUserByEmail(const std::string& email) const;
+    DbPlayerAggregate BuildAggregateForUser(int64_t userId) const;
 
     bool m_connected = false;
     std::string m_host;
@@ -117,5 +134,12 @@ private:
     std::string m_password;
     std::string m_database;
     sql::Driver* m_driver = nullptr;
+    int64_t m_nextUserId = 1000;
+    int64_t m_nextMatchId = 1;
+    std::unordered_map<int64_t, StoredUser> m_usersById;
+    std::unordered_map<std::string, int64_t> m_userIdByEmail;
+    std::map<std::pair<std::string, std::string>, int64_t> m_userIdByIdentity;
+    std::vector<StoredSession> m_sessions;
+    std::vector<DbMatch> m_matches;
     mutable std::mutex m_mutex;
 };

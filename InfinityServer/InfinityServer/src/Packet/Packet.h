@@ -21,6 +21,8 @@ constexpr uint16_t OP_MATCH_RESULT_REQ = 0x0008;
 constexpr uint16_t OP_MATCH_RESULT_RES = 0x0009;
 constexpr uint16_t OP_PLAYER_STATS_REQ = 0x000A;
 constexpr uint16_t OP_PLAYER_STATS_RES = 0x000B;
+constexpr uint16_t OP_ADMIN_MONITORING_REQ = 0x000C;
+constexpr uint16_t OP_ADMIN_MONITORING_RES = 0x000D;
 
 struct LoginReqBody
 {
@@ -115,6 +117,23 @@ struct PlayerStatsResBody
     int32_t total_deaths;
     int32_t total_assists;
     int32_t total_damage_dealt;
+    char message[64];
+};
+
+struct MonitoringNodeBody
+{
+    char name[32];
+    uint8_t healthy;
+};
+
+struct AdminMonitoringResBody
+{
+    uint8_t result;
+    int32_t active_match_count;
+    int32_t connected_session_count;
+    int32_t cached_leaderboard_entry_count;
+    int32_t node_count;
+    MonitoringNodeBody nodes[4];
     char message[64];
 };
 

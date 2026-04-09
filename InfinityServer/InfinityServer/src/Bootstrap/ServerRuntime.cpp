@@ -39,7 +39,7 @@ ServerRuntime::ServerRuntime(const ServerConfig& config)
     : m_config(config)
     , m_authService(m_userRepository, m_redisCache, m_tokenService)
     , m_adminMonitoringService(m_redisCache)
-    , m_matchResultDispatcher(m_matchRepository)
+    , m_matchResultDispatcher(m_matchRepository, m_redisCache)
 {
     const bool redisConnected = m_redisCache.Connect(config.Redis.Host, config.Redis.Port);
     const bool dbConnected = DBConnector::Get().Connect(config.Mysql.Host,
