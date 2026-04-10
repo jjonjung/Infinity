@@ -6,6 +6,18 @@ END_MESSAGE_MAP()
 
 CMfcTestClientApp theApp;
 
+int WINAPI wWinMain(HINSTANCE instance, HINSTANCE previousInstance, LPWSTR commandLine, int showCommand)
+{
+    if (!AfxWinInit(instance, previousInstance, commandLine, showCommand))
+    {
+        return 1;
+    }
+
+    theApp.InitApplication();
+    theApp.InitInstance();
+    return 0;
+}
+
 BOOL CMfcTestClientApp::InitInstance()
 {
     CWinApp::InitInstance();

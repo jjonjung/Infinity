@@ -3,6 +3,7 @@
 #include "../InfinityServer/src/TestClient/Application/TestClientService.h"
 #include "../InfinityServer/src/TestClient/Application/TestScenarioRunner.h"
 
+#include <afxdialogex.h>
 #include <afxwin.h>
 
 class CMfcTestClientMainDialog : public CDialogEx

@@ -1,6 +1,7 @@
 #include "MfcTestClientMainDialog.h"
 #include "resource.h"
 
+#include <atlconv.h>
 #include <sstream>
 
 BEGIN_MESSAGE_MAP(CMfcTestClientMainDialog, CDialogEx)
@@ -25,7 +26,7 @@ BOOL CMfcTestClientMainDialog::OnInitDialog()
     CDialogEx::OnInitDialog();
 
     WriteText(IDC_EDIT_HOST, _T("127.0.0.1"));
-    WriteText(IDC_EDIT_PORT, _T("9000"));
+    WriteText(IDC_EDIT_PORT, _T("3306"));
     WriteText(IDC_EDIT_EMAIL, _T("tester@infinity.local"));
     WriteText(IDC_EDIT_PASSWORD, _T("pass1234"));
     WriteText(IDC_EDIT_NICKNAME, _T("LocalTester"));
@@ -40,22 +41,16 @@ void CMfcTestClientMainDialog::OnBnClickedConnect()
     CString portText = ReadText(IDC_EDIT_PORT);
     std::string errorMessage;
 
-    const bool connected = m_service.Connect(CT2A(host), static_cast<uint16_t>(_ttoi(portText)), errorMessage);
+    const bool connected = m_service.Connect(std::string(CT2A(host)), static_cast<uint16_t>(_ttoi(portText)), errorMessage);
     AppendLog(connected ? _T("Connected to server") : CString(errorMessage.c_str()));
-
-    if (connected)
-    {
-        const auto monitoring = m_service.QueryMonitoringSnapshot();
-        RenderResult(monitoring);
-    }
 }
 
 void CMfcTestClientMainDialog::OnBnClickedRegister()
 {
     ClientRegisterRequest request;
-    request.Email = CT2A(ReadText(IDC_EDIT_EMAIL));
-    request.Password = CT2A(ReadText(IDC_EDIT_PASSWORD));
-    request.Nickname = CT2A(ReadText(IDC_EDIT_NICKNAME));
+    request.Email = std::string(CT2A(ReadText(IDC_EDIT_EMAIL)));
+    request.Password = std::string(CT2A(ReadText(IDC_EDIT_PASSWORD)));
+    request.Nickname = std::string(CT2A(ReadText(IDC_EDIT_NICKNAME)));
 
     RenderResult(m_service.RegisterLocal(request));
 }
@@ -63,8 +58,8 @@ void CMfcTestClientMainDialog::OnBnClickedRegister()
 void CMfcTestClientMainDialog::OnBnClickedLogin()
 {
     ClientLoginRequest request;
-    request.Email = CT2A(ReadText(IDC_EDIT_EMAIL));
-    request.Password = CT2A(ReadText(IDC_EDIT_PASSWORD));
+    request.Email = std::string(CT2A(ReadText(IDC_EDIT_EMAIL)));
+    request.Password = std::string(CT2A(ReadText(IDC_EDIT_PASSWORD)));
 
     RenderResult(m_service.LoginLocal(request));
 }
@@ -73,7 +68,7 @@ void CMfcTestClientMainDialog::OnBnClickedGoogleLogin()
 {
     ClientSocialLoginRequest request;
     request.Provider = "google";
-    request.ProviderToken = CT2A(ReadText(IDC_EDIT_PROVIDER_TOKEN));
+    request.ProviderToken = std::string(CT2A(ReadText(IDC_EDIT_PROVIDER_TOKEN)));
 
     RenderResult(m_service.LoginSocial(request));
 }
@@ -89,7 +84,7 @@ void CMfcTestClientMainDialog::OnBnClickedSteamLogin()
 
 void CMfcTestClientMainDialog::OnBnClickedValidateToken()
 {
-    RenderResult(m_service.ValidateGameSession(CT2A(ReadText(IDC_EDIT_GAME_TOKEN))));
+    RenderResult(m_service.ValidateGameSession(std::string(CT2A(ReadText(IDC_EDIT_GAME_TOKEN)))));
 }
 
 void CMfcTestClientMainDialog::OnBnClickedSubmitMatch()

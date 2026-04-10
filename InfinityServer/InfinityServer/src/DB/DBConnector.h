@@ -133,6 +133,7 @@ private:
     std::string m_user;
     std::string m_password;
     std::string m_database;
+    bool m_useMysqlBackend = false;
     sql::Driver* m_driver = nullptr;
     int64_t m_nextUserId = 1000;
     int64_t m_nextMatchId = 1;

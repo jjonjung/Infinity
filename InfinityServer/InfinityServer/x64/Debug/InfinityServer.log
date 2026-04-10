@@ -1,0 +1,38 @@
+﻿  AdminMonitoringService.cpp
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Session.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'src/Admin/Application/AdminMonitoringService.cpp'을(를) 컴파일하는 중)
+  
+  AuthService.cpp
+  ServerRuntime.cpp
+  DBConnector.cpp
+  RedisCache.cpp
+  MatchRepository.cpp
+  UserRepository.cpp
+  MatchResultDispatcher.cpp
+  Server.cpp
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Server.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Server.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'src/Network/Server.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Session.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'src/Network/Server.cpp'을(를) 컴파일하는 중)
+  
+  Session.cpp
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Session.cpp(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Session.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'src/Network/Session.cpp'을(를) 컴파일하는 중)
+  
+  PacketHandler.cpp
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Session.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'src/Packet/PacketHandler.cpp'을(를) 컴파일하는 중)
+  
+  TestClientService.cpp
+  TestScenarioRunner.cpp
+  TestScenarioCatalog.cpp
+  TestClientConnection.cpp
+  main.cpp
+C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\src\Network\Server.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  (소스 파일 'src/main.cpp'을(를) 컴파일하는 중)
+  
+  코드를 생성하고 있습니다...
+  InfinityServer.vcxproj -> C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\x64\Debug\InfinityServer.exe

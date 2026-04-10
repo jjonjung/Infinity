@@ -3,6 +3,8 @@ $env:INFINITY_MYSQL_PORT = "3306"
 $env:INFINITY_MYSQL_DATABASE = "infinity"
 $env:INFINITY_MYSQL_USER = "app"
 $env:INFINITY_MYSQL_PASSWORD = "dev-password"
+$connectorRoot = "C:\MySQL\MySQL Connector C++ 8.4"
+$env:PATH = "$connectorRoot\lib64;$connectorRoot\bin;$env:PATH"
 
 $serverExe = "C:\Users\EJ\Desktop\Fork\Infinity\InfinityServer\InfinityServer\x64\Debug\InfinityServer.exe"
 

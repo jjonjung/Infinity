@@ -65,7 +65,7 @@
     <MySqlConnectorRoot Condition="'$(MySqlConnectorRoot)'==''">$(MYSQL_CONNECTOR_CPP_DIR)</MySqlConnectorRoot>
     <MySqlConnectorIncludeDir Condition="'$(MySqlConnectorRoot)'!=''">$(MySqlConnectorRoot)\include;</MySqlConnectorIncludeDir>
     <MySqlConnectorLibraryDir Condition="'$(MySqlConnectorRoot)'!=''">$(MySqlConnectorRoot)\lib64\vs14;$(MySqlConnectorRoot)\lib64;</MySqlConnectorLibraryDir>
-    <MySqlConnectorLibrary Condition="'$(MySqlConnectorRoot)'!=''">mysqlcppconn8.lib;</MySqlConnectorLibrary>
+    <MySqlConnectorLibrary Condition="'$(MySqlConnectorRoot)'!=''">mysqlcppconn.lib;libssl.lib;libcrypto.lib;</MySqlConnectorLibrary>
   </PropertyGroup>
 
   <!-- ─── Debug|x64 컴파일·링크 옵션 ───────────────── -->

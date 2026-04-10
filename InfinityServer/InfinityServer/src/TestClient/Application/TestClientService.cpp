@@ -3,6 +3,8 @@
 #include "Packet/Packet.h"
 
 #include <cstring>
+#include <iomanip>
+#include <sstream>
 
 namespace
 {
@@ -268,7 +270,12 @@ bool TestClientService::ReceiveTypedPacket(uint16_t expectedOpcode, TResponse& r
 
     if (envelope.Opcode != expectedOpcode)
     {
-        errorMessage = "unexpected opcode received";
+        std::ostringstream oss;
+        oss << "unexpected opcode received expected=0x"
+            << std::hex << std::uppercase << expectedOpcode
+            << " actual=0x" << envelope.Opcode
+            << std::dec << " bodySize=" << envelope.Body.size();
+        errorMessage = oss.str();
         return false;
     }
 
