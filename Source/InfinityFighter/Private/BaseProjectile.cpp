@@ -20,7 +20,7 @@ void ABaseProjectile::ProjectileMove_Implementation()
 	const FVector Direction = GetActorForwardVector();
 	const float  VT         = GetWorld()->DeltaTimeSeconds;
 
-	CurrentPosition += Direction * 5000 * VT; 
+	CurrentPosition += Direction * 3000 * VT; 
 
 	FHitResult Hit;
 	
