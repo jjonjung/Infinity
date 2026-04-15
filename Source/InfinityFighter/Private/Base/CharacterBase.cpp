@@ -715,31 +715,24 @@ bool ACharacterBase::IsInPlayerFieldOfView(ACharacterBase* PlayerCharacter) cons
 ACharacterBase* ACharacterBase::GetNearestPlayerCharacter() const
 {
 	ACharacterBase* NearestPlayer = nullptr;
-	float MinDistance = MaxDetectionRange;
+	float MinDistSq = MaxDetectionRange * MaxDetectionRange;
 
-	// 월드의 모든 CharacterBase 검색
-	for (TActorIterator<ACharacterBase> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	// 플레이어 폰에서 직접 획득 (TActorIterator 전체 순회 대신)
+	UWorld* World = GetWorld();
+	if (!World) return nullptr;
+
+	for (FConstPlayerControllerIterator It = World->GetPlayerControllerIterator(); It; ++It)
 	{
-		ACharacterBase* Character = *ActorItr;
+		APlayerController* PC = It->Get();
+		if (!PC) continue;
 
-		// 자기 자신은 제외
-		if (!Character || Character == this)
-		{
-			continue;
-		}
+		ACharacterBase* Character = Cast<ACharacterBase>(PC->GetPawn());
+		if (!Character || Character == this) continue;
 
-		// AI가 아닌 캐릭터(플레이어)만 검색
-		UCBrainComponent* BrainComp = Character->FindComponentByClass<UCBrainComponent>();
-		if (!BrainComp || BrainComp->Mode == EBrainMode::AI)
+		const float DistSq = FVector::DistSquared(GetActorLocation(), Character->GetActorLocation());
+		if (DistSq < MinDistSq)
 		{
-			continue;
-		}
-
-		// 거리 계산
-		float Distance = FVector::Dist(GetActorLocation(), Character->GetActorLocation());
-		if (Distance < MinDistance)
-		{
-			MinDistance = Distance;
+			MinDistSq = DistSq;
 			NearestPlayer = Character;
 		}
 	}

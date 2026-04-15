@@ -3,6 +3,7 @@
 #include "Component/AiBrainComponent.h"
 #include "Base/CharacterBase.h"
 #include "GameFramework/Character.h"
+#include "EngineUtils.h"
 #include "Engine/Engine.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -88,13 +89,14 @@ void UAiBrainComponent::UpdateAIStateMachine(EEnemyState NewState)
 
 void UAiBrainComponent::ExecuteCurrentState(EEnemyState NewState)
 {
-	// 현재 상태를 화면에 표시 (디버깅용)
+#if !UE_BUILD_SHIPPING
 	if (GEngine)
 	{
 		FString StateString = UEnum::GetValueAsString(CurrentEnemyState);
 		GEngine->AddOnScreenDebugMessage(0, 0.1f, FColor::Cyan,
 			FString::Printf(TEXT("AI State: %s"), *StateString));
 	}
+#endif
 
 	// 상태별 처리
 	switch (CurrentEnemyState)
@@ -696,47 +698,33 @@ void UAiBrainComponent::ExecuteCoverAttackPattern(ACharacter* Character, const F
 
 void UAiBrainComponent::CheckForSpiderManPullAndTriggerIronManSkill(ACharacter* Character)
 {
-	if (!Character || !GetWorld()) return;
-
-	// 근처의 모든 액터를 탐지하여 SpiderMan과 IronMan을 찾기
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACharacter::StaticClass(), FoundActors);
+	UWorld* World = GetWorld();
+	if (!Character || !World) return;
 
 	ACharacter* SpiderManActor = nullptr;
 	ACharacter* IronManActor = nullptr;
 
-	// SpiderMan과 IronMan 캐릭터 찾기
-	for (AActor* Actor : FoundActors)
+	// GetAllActorsOfClass 대신 TActorIterator 사용 (임시 배열 할당 없음)
+	for (TActorIterator<ACharacter> It(World); It; ++It)
 	{
-		if (!Actor) continue;
+		ACharacter* Other = *It;
+		if (!Other || Other == Character) continue;
 
-		FString ActorName = Actor->GetName();
-		FString ActorClassName = Actor->GetClass()->GetName();
-
-		// BP_MySpiderMan 찾기 (Blueprint 이름 기반)
-		if (ActorName.Contains(TEXT("SpiderMan")) || ActorClassName.Contains(TEXT("SpiderMan")))
+		const FString ClassName = Other->GetClass()->GetName();
+		if (!SpiderManActor && ClassName.Contains(TEXT("SpiderMan")))
 		{
-			SpiderManActor = Cast<ACharacter>(Actor);
-			UE_LOG(LogTemp, Warning, TEXT("SpiderMan 발견: %s"), *ActorName);
+			SpiderManActor = Other;
 		}
-		// BP_MyIronMan 찾기 (Blueprint 이름 기반)
-		else if (ActorName.Contains(TEXT("IronMan")) || ActorClassName.Contains(TEXT("IronMan")))
+		else if (!IronManActor && ClassName.Contains(TEXT("IronMan")))
 		{
-			IronManActor = Cast<ACharacter>(Actor);
-			UE_LOG(LogTemp, Warning, TEXT("IronMan 발견: %s"), *ActorName);
+			IronManActor = Other;
 		}
+		if (SpiderManActor && IronManActor) break; // 둘 다 찾으면 조기 종료
 	}
 
-	// SpiderMan이 있고 플레이어를 당기는 스킬을 사용 중인지 확인
-	if (SpiderManActor && IsSpiderManUsingPullSkill(SpiderManActor))
+	if (SpiderManActor && IsSpiderManUsingPullSkill(SpiderManActor) && IronManActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SpiderMan이 플레이어를 당기는 중! IronMan 스킬 트리거"));
-
-		// IronMan이 있으면 스킬 사용
-		if (IronManActor)
-		{
-			TriggerIronManSkill(IronManActor);
-		}
+		TriggerIronManSkill(IronManActor);
 	}
 }
 

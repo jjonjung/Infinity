@@ -53,7 +53,7 @@ bool UActionRouter::IsValidIntent(FName IntentName)
 		UE_LOG(LogTemp,Warning,TEXT("인텐트에 맞는 액션이 있습니다."));
 		return true;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("IntentName"), IntentName);
+	UE_LOG(LogTemp, Warning, TEXT("인텐트에 맞는 액션이 없습니다: %s"), *IntentName.ToString());
 
 	UE_LOG(LogTemp,Warning,TEXT("인텐트에 맞는 액션이 없습니다."));
 	return false;

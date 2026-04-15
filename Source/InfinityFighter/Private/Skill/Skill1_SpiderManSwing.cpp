@@ -525,8 +525,9 @@ void USkill1_SpiderManSwing::CheckSwingAttack(ACharacterBase* Owner)
 		}
 	}
 
-	// 디버그 구체 그리기
+#if !UE_BUILD_SHIPPING
 	DrawDebugSphere(World, OwnerLocation, AttackRadius, 12, FColor::Red, false, 0.1f);
+#endif
 }
 
 void USkill1_SpiderManSwing::PerformSwingAttack(ACharacterBase* Owner, ACharacterBase* Target)
@@ -557,13 +558,12 @@ void USkill1_SpiderManSwing::PerformSwingAttack(ACharacterBase* Owner, ACharacte
 	}
 
 	// 타격 효과 (파티클, 사운드 등을 나중에 추가 가능)
+#if !UE_BUILD_SHIPPING
 	if (UWorld* World = Owner->GetWorld())
 	{
-		// 타격 지점에 이펙트 표시
 		FVector HitLocation = Target->GetActorLocation();
 		DrawDebugSphere(World, HitLocation, 50.0f, 12, FColor::Yellow, false, 2.0f);
 
-		// 충격파 효과
 		for (int32 i = 0; i < 8; i++)
 		{
 			FVector EffectDirection = FVector(
@@ -571,18 +571,11 @@ void USkill1_SpiderManSwing::PerformSwingAttack(ACharacterBase* Owner, ACharacte
 				FMath::Sin(i * 45.0f * PI / 180.0f),
 				0.0f
 			);
-			DrawDebugLine(
-				World,
-				HitLocation,
-				HitLocation + EffectDirection * 100.0f,
-				FColor::Orange,
-				false,
-				1.0f,
-				0,
-				3.0f
-			);
+			DrawDebugLine(World, HitLocation, HitLocation + EffectDirection * 100.0f,
+				FColor::Orange, false, 1.0f, 0, 3.0f);
 		}
 	}
+#endif
 }
 
 bool USkill1_SpiderManSwing::CanAttackTarget(ACharacterBase* Owner, ACharacterBase* Target) const

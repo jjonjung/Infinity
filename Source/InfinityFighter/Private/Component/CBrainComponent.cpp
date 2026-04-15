@@ -120,17 +120,17 @@ bool UCBrainComponent::BaseMove()
 	// TargetActor 없거나 무효 → 재획득 시도
 	if (!TargetActor.IsValid())
 	{
-		if (GetWorld()->GetFirstPlayerController() != nullptr)//UWorld* World = GetWorld()
+		UWorld* World = GetWorld();
+		if (World && World->GetFirstPlayerController())
 		{
-			UWorld* World = GetWorld();
 			TargetActor = Cast<ACharacter>(UGameplayStatics::GetPlayerPawn(World, 0));
 		}
-		
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("[Brain] BaseMove: TargetActor invalid, skip this frame"));
-		return true;
+		// 재획득 실패 시 이 프레임 스킵
+		if (!TargetActor.IsValid())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[Brain] BaseMove: TargetActor invalid, skip this frame"));
+			return true;
+		}
 	}
 
 	const FVector ToTarget = TargetActor->GetActorLocation() - Self->GetActorLocation();

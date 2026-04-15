@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/OverlapResult.h"
 #include "ActionBase.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"

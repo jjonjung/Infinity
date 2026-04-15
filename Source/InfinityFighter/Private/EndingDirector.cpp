@@ -52,7 +52,6 @@ void AEndingDirector::PlayAfterDelayAndHold(ACharacter* Char, UAnimMontage* Mont
 		const float Duration = Anim->Montage_Play(M, 1.0f);
 		if (Duration <= 0.f) return;
 
-		const float HoldEpsilon = 0.02f;
 		const float PauseAt = FMath::Max(0.f, Duration - HoldEpsilon);
 
 		FTimerHandle PauseHandle;

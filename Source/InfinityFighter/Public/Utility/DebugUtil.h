@@ -48,7 +48,7 @@ namespace Debug
 	
 	}
 #else
-	inline void Screen(const FString&, float=0, const FColor&=FColor::White, int32=-1) {}
+	inline void Screen(const FString&, float=0, FColor=FColor(255,255,255,255), int32=-1) {}
 	inline void LogInfo(const FString&) {} inline void LogWarn(const FString&) {}
 	inline void LogError(const FString&) {} inline void PrintHit(AActor*,AActor*,FName,float,bool,float=0) {}
 #endif

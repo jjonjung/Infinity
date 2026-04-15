@@ -27,6 +27,12 @@ public class InfinityFighter : ModuleRules
         // AI/Navigation runtime dependencies used by GameMode/AI spawning
         PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTasks" });
 
+        // Android: libc++_shared 명시적 링크 (UE5.6 NDK r27 vtable 링크 누락 버그 우회)
+        if (Target.Platform == UnrealTargetPlatform.Android)
+        {
+            PublicSystemLibraries.Add("c++_shared");
+        }
+
 		PrivateIncludePaths.Add(ModuleDirectory);
 		PublicIncludePaths.Add(ModuleDirectory);
 		

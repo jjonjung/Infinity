@@ -56,7 +56,9 @@ bool UDoublePressed::CanActivate_Implementation(ACharacterBase* Owner, FString& 
           return false;
        }
     }
+#if !UE_BUILD_SHIPPING
 	GEngine->AddOnScreenDebugMessage(-1,5,FColor::Red,"RunMode");
+#endif
 	Owner -> SetIsRunning(true);
 	Owner -> GetCharacterMovement()->MaxWalkSpeed=1000.f;
 	FailReason = "Hit object is not a wall";
@@ -66,8 +68,10 @@ bool UDoublePressed::CanActivate_Implementation(ACharacterBase* Owner, FString& 
 
 void UDoublePressed::Activate_Implementation(ACharacterBase* Owner)
 {
+#if !UE_BUILD_SHIPPING
 	GEngine->AddOnScreenDebugMessage(-1,5,FColor::Red,"hitwall");
-    
+#endif
+
 	// 벽에서 살짝 떨어진 거리로 캐릭터 위치 조정 + 지면에서 띄우기
 	if (CurrentWall)
 	{
