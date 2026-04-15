@@ -31,7 +31,7 @@ public:
 	        // Result.TopKillerName.ToString();
 	        // Result.TopKills;
 	        // 예) 순위표 순회
-	        // for (const FPlayerMatchStat& S : Result.PlayerStats) { /* S.DisplayName, S.Rank, S.Kills, S.Deaths, S.KD  }
+	        // for (const FPlayerMatchStat& S : Result.PlayerStats) { // S.DisplayName, S.Rank, S.Kills, S.Deaths, S.KD  }
 	    }
 
 	 2) 블루프린트에서 사용

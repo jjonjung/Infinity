@@ -25,7 +25,7 @@ public class InfinityFighter : ModuleRules
         });
 
         // AI/Navigation runtime dependencies used by GameMode/AI spawning
-        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTasks", "NavigationSystem", "AugmentedReality", "AugmentedReality", "AugmentedReality", "AugmentedReality", "AugmentedReality", "AugmentedReality" });
+        PrivateDependencyModuleNames.AddRange(new string[] { "GameplayTasks" });
 
 		PrivateIncludePaths.Add(ModuleDirectory);
 		PublicIncludePaths.Add(ModuleDirectory);

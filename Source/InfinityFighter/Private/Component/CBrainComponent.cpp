@@ -3,7 +3,6 @@
 
 #include "Component/CBrainComponent.h"
 #include "CharacterActionStatComponent.h"
-#include "PhysicsAssetUtils.h"
 #include "Base/CharacterBase.h"
 #include "Component/AiBrainComponent.h"
 #include "Component/InputProxyComponent.h"

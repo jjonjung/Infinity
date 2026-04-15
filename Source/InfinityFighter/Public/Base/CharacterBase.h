@@ -129,8 +129,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Wall") 
 	void DisableCameraRotationOnly(); 
 
-    UFUNCTION(BlueprintCallable, Category="Damage") 
-    void TakeDamage(float Amount, AActor* Causer);
+    UFUNCTION(BlueprintCallable, Category="Damage")
+    void ReceiveDamage(float Amount, AActor* Causer);
 
     // Match identity for killfeed/scoreboard
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Match")

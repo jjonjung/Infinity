@@ -166,7 +166,7 @@ void AProjectile::ApplyDamageCommon(AActor* Victim, const FHitResult* HitOpt)
     {
         if (ACharacterBase* VictimChar = Cast<ACharacterBase>(Victim))
         {
-            VictimChar->TakeDamage(Damage, this);
+            VictimChar->ReceiveDamage(Damage, this);
         }
         else if (auto* VictimStat = Victim->FindComponentByClass<UCharacterActionStatComponent>())
         {

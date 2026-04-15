@@ -228,7 +228,7 @@ void USkill1_IronMan::PerformRepulsorRaycast()
                 // 데미지 적용
                 if (ACharacterBase* TargetCharacter = Cast<ACharacterBase>(HitActor))
                 {
-                    TargetCharacter->TakeDamage(BaseDamage, IronManOwner);
+                    TargetCharacter->ReceiveDamage(BaseDamage, IronManOwner);
                 }
 
                 // 물리적 임펄스 전달

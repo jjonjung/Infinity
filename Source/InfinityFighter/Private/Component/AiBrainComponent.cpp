@@ -597,14 +597,14 @@ void UAiBrainComponent::ExecuteStrafingJumpPattern(ACharacter* Character, const 
 			Direction.Z = 0.0f;
 			Direction = Direction.GetSafeNormal();
                  
-			float Distance = FVector::Dist(CurrentLocation, TargetLocation);
+			float TargetDistance = FVector::Dist(CurrentLocation, TargetLocation);
 			FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
 			Character->SetActorRotation(FRotator(0, LookAtRotation.Yaw, 0)); // Yaw만 적용
 			RecievedIntent(FName("Input.Skill1"));
 			RecievedIntent(FName("Input.Fire"));
-                 
-			UE_LOG(LogTemp, Warning, TEXT("패턴2: SpiderMan Skill1: Direction(%s), Distance(%.2f)"), 
-				  *Direction.ToString(), Distance);
+
+			UE_LOG(LogTemp, Warning, TEXT("패턴2: SpiderMan Skill1: Direction(%s), Distance(%.2f)"),
+				  *Direction.ToString(), TargetDistance);
 		}
 		/*else
 		{

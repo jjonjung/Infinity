@@ -446,7 +446,7 @@ void ACharacterBase::DisableCameraRotationOnly()
 
 }
 //피격	
-void ACharacterBase::TakeDamage(float Amount, AActor* Causer)
+void ACharacterBase::ReceiveDamage(float Amount, AActor* Causer)
 {
 	if (bIsDead)
 	{
