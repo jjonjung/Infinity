@@ -196,6 +196,27 @@ struct GameMatchEndBody
 struct GamePingBody { uint32_t client_time_ms; };
 struct GamePongBody { uint32_t client_time_ms; uint32_t server_time_ms; };
 
+// ── 인게임 채팅 ───────────────────────────────────────
+
+// C→S: 채팅 메시지 전송
+//   - 매치 진행 중에만 유효 (인증 검증은 GameSession에서 수행)
+//   - 서버가 server_tick을 붙여 브로드캐스트 → 클라이언트가 순서 보정 가능
+struct GameChatReqBody
+{
+    char message[128];   // null-terminated UTF-8
+};
+
+// S→C: 인게임 채팅 브로드캐스트 — 룸 전원에게 전송
+//   - server_tick: 메시지 도착 시점의 서버 틱 (클라이언트 채팅 로그 시간 표시용)
+//   - 보낸 사람 포함 전원 수신 (자신의 메시지도 서버 경유 확인)
+struct GameChatNtfyBody
+{
+    uint32_t server_tick;  // 메시지 수신 시점 서버 틱
+    int64_t  user_id;      // 발신자 user_id
+    char     nickname[32]; // 발신자 닉네임
+    char     message[128]; // 실제 메시지
+};
+
 // ── 상태 플래그 ───────────────────────────────────────
 
 enum PlayerStateFlag : uint8_t

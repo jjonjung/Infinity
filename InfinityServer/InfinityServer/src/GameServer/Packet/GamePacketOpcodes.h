@@ -42,3 +42,7 @@ constexpr uint16_t OP_GAME_MATCH_END        = 0x020C;  // S→C: 매치 종료 +
 // 지연 측정
 constexpr uint16_t OP_GAME_PING             = 0x020D;  // C→S: 핑 요청
 constexpr uint16_t OP_GAME_PONG             = 0x020E;  // S→C: 핑 응답
+
+// 인게임 채팅
+constexpr uint16_t OP_GAME_CHAT_REQ         = 0x020F;  // C→S: 채팅 메시지 전송
+constexpr uint16_t OP_GAME_CHAT_NTFY        = 0x0210;  // S→C: 채팅 메시지 브로드캐스트
