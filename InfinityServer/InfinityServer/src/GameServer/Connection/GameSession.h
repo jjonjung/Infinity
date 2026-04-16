@@ -7,6 +7,7 @@
 #include <ws2tcpip.h>
 #include <atomic>
 #include <cstdint>
+#include <cstring>
 #include <mutex>
 #include <vector>
 #include "Shared/Network/ISession.h"
@@ -34,13 +35,21 @@ public:
     void Run();
     void SendPacket(uint16_t opcode, const char* body, uint16_t bodySize) override;
 
-    void     SetUserId(int64_t id)   { m_userId = id; }
-    void     SetRoom(GameRoom* room) { m_room = room; }
-    void     SetAuthenticated()      { m_authenticated = true; }
+    void     SetUserId(int64_t id)          { m_userId = id; }
+    void     SetRoom(GameRoom* room)       { m_room = room; }
+    void     SetRoomId(uint32_t id)        { m_roomId = id; }
+    void     SetAuthenticated()            { m_authenticated = true; }
+    void     SetNickname(const char* nick)
+    {
+        std::strncpy(m_nickname, nick, sizeof(m_nickname) - 1);
+        m_nickname[sizeof(m_nickname) - 1] = '\0';
+    }
 
     int64_t    GetUserId()       const { return m_userId; }
+    uint32_t   GetRoomId()       const { return m_roomId; }
     GameRoom*  GetRoom()         const { return m_room; }
     bool       IsAuthenticated() const { return m_authenticated; }
+    const char* GetNickname()    const { return m_nickname; }
 
     static int GetActiveCount();
 
@@ -56,7 +65,9 @@ private:
 
     bool      m_authenticated = false;
     int64_t   m_userId        = 0;
+    uint32_t  m_roomId        = 0;
     GameRoom* m_room          = nullptr;
+    char      m_nickname[32]  = {};
 
     static std::atomic<int> s_count;
 };

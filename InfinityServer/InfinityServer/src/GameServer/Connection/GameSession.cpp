@@ -26,11 +26,9 @@ GameSession::GameSession(SOCKET socket, sockaddr_in addr)
 
 GameSession::~GameSession()
 {
-    if (m_room && m_userId)
-    {
-        // 룸에서 자신을 제거 (구체적인 처리는 GameRoom에서)
-        // GameRoom::RemoveSession(m_userId) 호출은 GameRoom.cpp에서 처리
-    }
+    // 세션 레지스트리 해제 — 채팅 브로드캐스트 대상에서 제거
+    if (m_roomId != 0)
+        GameServer::Get().UnregisterSession(m_roomId, this);
 
     if (m_socket != INVALID_SOCKET)
     {
@@ -78,11 +76,14 @@ void GameSession::Run()
             GameConnectResBody res{};
             if (room)
             {
-                m_room = room;
-                // GameRoom::AddSession은 GameRoom.cpp 구현에서 user_id 설정
+                m_room          = room;
+                m_roomId        = room->Id;
                 m_authenticated = true;
-                res.result = 1;
+                res.result      = 1;
                 std::strncpy(res.message, "게임 접속 성공", sizeof(res.message) - 1);
+
+                // 세션 레지스트리에 등록 — 채팅 브로드캐스트 대상이 됨
+                GameServer::Get().RegisterSession(m_roomId, this);
             }
             else
             {
@@ -123,6 +124,48 @@ void GameSession::Run()
                 SendPacket(OP_GAME_PONG,
                            reinterpret_cast<const char*>(&pong), sizeof(pong));
             }
+            continue;
+        }
+
+        // ── 인게임 채팅 ───────────────────────────────
+        //
+        //  설계:
+        //    클라이언트 → OP_GAME_CHAT_REQ → GameSession
+        //    → GameServer::BroadcastToRoom → 룸 내 모든 GameSession::SendPacket
+        //
+        //  스레드 안전:
+        //    BroadcastToRoom 내부에서 m_roomMutex 보유 중 세션 포인터만 복사 후 해제
+        //    → LobbyRoom::Broadcast와 동일한 락 분리 전략
+        //    각 GameSession::SendPacket은 m_sendMutex로 보호
+        //
+        //  Race Condition 대응:
+        //    메시지 null-termination 강제
+        //    미인증/룸 미배정 세션은 위 인증 차단에서 이미 걸러짐
+        // ─────────────────────────────────────────────
+        if (header.opcode == OP_GAME_CHAT_REQ)
+        {
+            if (header.body_size < sizeof(GameChatReqBody)) continue;
+            if (m_roomId == 0) continue;  // 룸 미배정 방어
+
+            const auto* req = reinterpret_cast<const GameChatReqBody*>(m_recvBuf.data());
+
+            GameChatNtfyBody ntfy{};
+            ntfy.server_tick = 0;  // ServerTick과 연동 시 현재 틱으로 교체
+            ntfy.user_id     = m_userId;
+            std::strncpy(ntfy.nickname, m_nickname, sizeof(ntfy.nickname) - 1);
+            ntfy.nickname[sizeof(ntfy.nickname) - 1] = '\0';
+            std::strncpy(ntfy.message, req->message, sizeof(ntfy.message) - 1);
+            ntfy.message[sizeof(ntfy.message) - 1] = '\0';
+
+            Logger::Write(LogLevel::Info, "game-chat",
+                          "[룸" + std::to_string(m_roomId) + "] " +
+                          std::string(ntfy.nickname) + ": " + ntfy.message);
+
+            // BroadcastToRoom: 락 내 포인터 스냅샷 → 락 해제 → 송신
+            GameServer::Get().BroadcastToRoom(m_roomId, OP_GAME_CHAT_NTFY,
+                                              reinterpret_cast<const char*>(&ntfy),
+                                              sizeof(ntfy));
+            continue;
         }
     }
 }

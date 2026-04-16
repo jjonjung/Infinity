@@ -1,6 +1,9 @@
 #include "GameServer/Connection/GameServer.h"
 #include "GameServer/Connection/GameSession.h"
+#include "Shared/Network/ISession.h"
 #include "Shared/Logging/Logger.h"
+
+#include <algorithm>
 
 #include <ws2tcpip.h>
 #include <string>
@@ -158,6 +161,64 @@ void GameServer::RemoveRoom(uint32_t roomId)
 {
     std::lock_guard<std::mutex> lock(m_roomMutex);
     m_rooms.erase(roomId);
+    m_roomSessions.erase(roomId);
     Logger::Write(LogLevel::Info, "game-server",
                   "게임 룸 제거 id=" + std::to_string(roomId));
+}
+
+// ─────────────────────────────────────────────────────
+//  세션 레지스트리 — 인게임 채팅 브로드캐스트용
+// ─────────────────────────────────────────────────────
+
+void GameServer::RegisterSession(uint32_t roomId, GameSession* sess)
+{
+    std::lock_guard<std::mutex> lock(m_roomMutex);
+    m_roomSessions[roomId].push_back(sess);
+    Logger::Write(LogLevel::Info, "game-server",
+                  "세션 등록 room=" + std::to_string(roomId) +
+                  " user_id=" + std::to_string(sess->GetUserId()));
+}
+
+void GameServer::UnregisterSession(uint32_t roomId, GameSession* sess)
+{
+    std::lock_guard<std::mutex> lock(m_roomMutex);
+    auto it = m_roomSessions.find(roomId);
+    if (it == m_roomSessions.end()) return;
+
+    auto& vec = it->second;
+    vec.erase(std::remove(vec.begin(), vec.end(), sess), vec.end());
+
+    Logger::Write(LogLevel::Info, "game-server",
+                  "세션 해제 room=" + std::to_string(roomId) +
+                  " user_id=" + std::to_string(sess->GetUserId()));
+}
+
+// ─────────────────────────────────────────────────────
+//  BroadcastToRoom — 채팅 메시지를 룸 내 모든 세션에 전송
+//
+//  락 분리 전략 (LobbyRoom::Broadcast와 동일):
+//    1. m_roomMutex 보유 중 세션 포인터만 벡터로 복사
+//    2. 락 해제 후 SendPacket 호출
+//    → send() 블로킹이 룸 상태 조작(Register/Unregister)을 차단하지 않음
+//
+//  Race Condition 대응:
+//    스냅샷 복사 시점 이후 세션이 해제되더라도
+//    GameSession::SendPacket 내부의 m_sendMutex가 동시 쓰기를 보호
+// ─────────────────────────────────────────────────────
+void GameServer::BroadcastToRoom(uint32_t roomId, uint16_t opcode,
+                                 const char* body, uint16_t bodySize)
+{
+    // 1단계: 락 보유 → 세션 포인터 스냅샷 복사
+    std::vector<GameSession*> snapshot;
+    {
+        std::lock_guard<std::mutex> lock(m_roomMutex);
+        auto it = m_roomSessions.find(roomId);
+        if (it == m_roomSessions.end()) return;
+        snapshot = it->second;  // 포인터 복사만 수행
+    }
+
+    // 2단계: 락 해제 후 송신 — 블로킹이 룸 조작에 영향 없음
+    for (GameSession* sess : snapshot)
+        if (sess)
+            sess->SendPacket(opcode, body, bodySize);
 }
