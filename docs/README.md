@@ -59,12 +59,6 @@
   - 닥터 스트레인지
   - 아웃게임 시스템
 
- ## 폴더 구성
-- 아키텍처: `/docs/architecture`
-- MFC 관련 문서: `/docs/mfc`
-- 알고리즘: `/docs/algorithms`
-- SQL: `/docs/sql`
-
   ## 문제 해결
 
   ### 1. AI 움직임의 단조로움
