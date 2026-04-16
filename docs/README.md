@@ -1,11 +1,64 @@
 
 # InfinityFighter
 
-  버블파이터를 오마주한 마블 히어로 배틀 시뮬레이터 프로젝트입니다.
-  Unreal Engine 5.6 기반으로 멀티플레이 전투, FSM 기반 AI, 인게임 UI, 게임 모드 흐름 제어를 중심으로 설계했으며, 캐릭터
-  별 전투 스킬과 물리 기반 상호작용을 구현했습니다.
+<div align="center">
+  <img src="../docs/img/infinityMain.png" width="100%" />
+  
+  <h3>Strategy Racing Shooting Game Portfolio</h3>
 
-  ## 포트폴리오 링크
+  <a href="https://www.unrealengine.com/">
+    <img src="https://img.shields.io/badge/Unreal_Engine-5.6.1-white?logo=unrealengine&logoColor=white&color=0E1128"/>
+  </a>
+  <a href="https://isocpp.org/">
+    <img src="https://img.shields.io/badge/C++-17-blue.svg?logo=c%2B%2B"/>
+  </a>
+  <a href="https://partner.steamgames.com/">
+    <img src="https://img.shields.io/badge/Steam-OnlineSubsystem-black?logo=steam"/>
+  </a>
+</div>
+
+<br>
+
+버블파이터를 오마주한 마블 히어로 배틀 시뮬레이터 프로젝트
+- Unreal Engine 5.6 기반으로 멀티플레이 전투, FSM 기반 AI, 인게임 UI, 게임 모드 흐름 제어를 중심으로 설계
+- 캐릭터별 전투 스킬과 물리 기반 상호작용을 구현
+
+---
+
+## ✓ Project Overview
+
+<div align="center">
+
+<table border="0" cellspacing="0" cellpadding="8" style="width: 100%; table-layout: fixed;">
+  <tr>
+    <td style="width: 20%; padding: 8px;"><strong>Project Name</strong></td>
+    <td style="padding: 8px;">InfinityFighter</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px;"><strong>Duration</strong></td>
+    <td style="padding: 8px;">2025.09</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px;"><strong>Team Size</strong></td>
+    <td style="padding: 8px;">3명</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px;"><strong>Engine</strong></td>
+    <td style="padding: 8px;">Unreal Engine 5.6</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px;"><strong>Tech</strong></td>
+    <td style="padding: 8px;">C++ / FSM / Physical / UMG / Android /Steam Server</td>
+  </tr>
+  <tr>
+    <td style="padding: 8px;"><strong>Purpose</strong></td>
+    <td style="padding: 8px;">멀티플레이 전투와 FSM 기반 AI를 결합한 액션 전투 경험 구현</td>
+  </tr>
+</table>
+
+</div>
+
+---
 
   - 시연 영상: [InfinityFighter](https://youtu.be/wRN-vNVbVC8?si=RwqurBEoky6E92Ew)
 
@@ -13,7 +66,7 @@
 
   - 프로젝트: 버블파이터를 오마주한 마블 히어로 배틀 슈팅 시뮬레이터
   - 목표: 멀티플레이 전투와 FSM 기반 AI를 결합한 액션 전투 경험 구현
-  - 기간: 2025.09 ~ 2025.09
+  - 기간: 2025.09 
   - 인원: 3명
   - 기술: Unreal Engine 5.6 / C++ / Blueprint / UMG / Steam Server
 
