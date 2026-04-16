@@ -133,6 +133,31 @@
     <ClCompile Include="src\TestClient\Transport\TestClientConnection.cpp" />
     <ClCompile Include="src\TestClient\TestScenarioCatalog.cpp" />
     <ClCompile Include="src\DB\DBConnector.cpp" />
+    <!-- ── LoginServer ── -->
+    <ClCompile Include="src\LoginServer\LoginServer.cpp" />
+    <ClCompile Include="src\LoginServer\LoginSession.cpp" />
+    <ClCompile Include="src\LoginServer\LoginPacketHandler.cpp" />
+    <!-- ── LobbyServer ── -->
+    <ClCompile Include="src\LobbyServer\LobbyServer.cpp" />
+    <ClCompile Include="src\LobbyServer\LobbySession.cpp" />
+    <ClCompile Include="src\LobbyServer\LobbyRoom.cpp" />
+    <ClCompile Include="src\LobbyServer\LobbyPacketHandler.cpp" />
+    <!-- ── GameServer / Connection ── -->
+    <ClCompile Include="src\GameServer\Connection\GameServer.cpp" />
+    <ClCompile Include="src\GameServer\Connection\GameSession.cpp" />
+    <!-- ── GameServer / State ── -->
+    <ClCompile Include="src\GameServer\State\GameStateManager.cpp" />
+    <!-- ── GameServer / Sync ── -->
+    <ClCompile Include="src\GameServer\Sync\MovementSync.cpp" />
+    <ClCompile Include="src\GameServer\Sync\StateSync.cpp" />
+    <!-- ── GameServer / Tick ── -->
+    <ClCompile Include="src\GameServer\Tick\ServerTick.cpp" />
+    <!-- ── GameServer / Prediction ── -->
+    <ClCompile Include="src\GameServer\Prediction\DeadReckoning.cpp" />
+    <!-- ── GameServer / Thread ── -->
+    <ClCompile Include="src\GameServer\Thread\ThreadPool.cpp" />
+    <!-- ── GameServer / DB ── -->
+    <ClCompile Include="src\GameServer\DB\GameDBTransaction.cpp" />
   </ItemGroup>
 
   <!-- ─── 헤더 파일 ──────────────────────────────── -->
@@ -161,6 +186,41 @@
     <ClInclude Include="src\TestClient\Transport\TestClientConnection.h" />
     <ClInclude Include="src\TestClient\TestScenarioCatalog.h" />
     <ClInclude Include="src\DB\DBConnector.h" />
+    <!-- ── Shared / Network ── -->
+    <ClInclude Include="src\Shared\Network\ISession.h" />
+    <!-- ── LoginServer ── -->
+    <ClInclude Include="src\LoginServer\LoginServer.h" />
+    <ClInclude Include="src\LoginServer\LoginSession.h" />
+    <ClInclude Include="src\LoginServer\LoginPacketHandler.h" />
+    <!-- ── LobbyServer ── -->
+    <ClInclude Include="src\LobbyServer\LobbyServer.h" />
+    <ClInclude Include="src\LobbyServer\LobbySession.h" />
+    <ClInclude Include="src\LobbyServer\LobbyRoom.h" />
+    <ClInclude Include="src\LobbyServer\LobbyPacketHandler.h" />
+    <ClInclude Include="src\LobbyServer\LobbyPacketDef.h" />
+    <!-- ── GameServer / Connection ── -->
+    <ClInclude Include="src\GameServer\Connection\GameServer.h" />
+    <ClInclude Include="src\GameServer\Connection\GameSession.h" />
+    <!-- ── GameServer / Packet ── -->
+    <ClInclude Include="src\GameServer\Packet\GamePacketOpcodes.h" />
+    <ClInclude Include="src\GameServer\Packet\GamePacketDef.h" />
+    <ClInclude Include="src\GameServer\Packet\Serializer.h" />
+    <!-- ── GameServer / State ── -->
+    <ClInclude Include="src\GameServer\State\PlayerState.h" />
+    <ClInclude Include="src\GameServer\State\GameStateManager.h" />
+    <!-- ── GameServer / Sync ── -->
+    <ClInclude Include="src\GameServer\Sync\MovementSync.h" />
+    <ClInclude Include="src\GameServer\Sync\StateSync.h" />
+    <!-- ── GameServer / Tick ── -->
+    <ClInclude Include="src\GameServer\Tick\ServerTick.h" />
+    <!-- ── GameServer / Prediction ── -->
+    <ClInclude Include="src\GameServer\Prediction\DeadReckoning.h" />
+    <!-- ── GameServer / Thread ── -->
+    <ClInclude Include="src\GameServer\Thread\SpinLock.h" />
+    <ClInclude Include="src\GameServer\Thread\ReadWriteLock.h" />
+    <ClInclude Include="src\GameServer\Thread\ThreadPool.h" />
+    <!-- ── GameServer / DB ── -->
+    <ClInclude Include="src\GameServer\DB\GameDBTransaction.h" />
   </ItemGroup>
 
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
