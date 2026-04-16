@@ -1,22 +1,9 @@
-# Infinity 문서 안내
-
-## 먼저 볼 문서
-- 백엔드 아키텍처: [architecture-v3-with-mfc-ops.md](/C:/Users/EJ/Desktop/Fork/Infinity/docs/architecture/architecture-v3-with-mfc-ops.md)
-- 서버 구현 현황: [server-implementation-roadmap.md](/C:/Users/EJ/Desktop/Fork/Infinity/docs/server-implementation-roadmap.md)
-- 데이터베이스 스키마: [auth_match_schema.sql](/C:/Users/EJ/Desktop/Fork/Infinity/docs/sql/auth_match_schema.sql)
-
+# Infinity 
 ## 폴더 구성
 - 아키텍처: `/docs/architecture`
 - MFC 관련 문서: `/docs/mfc`
 - 알고리즘: `/docs/algorithms`
 - SQL: `/docs/sql`
-
-## 권장 읽기 순서
-1. [architecture-v3-with-mfc-ops.md](/C:/Users/EJ/Desktop/Fork/Infinity/docs/architecture/architecture-v3-with-mfc-ops.md)
-2. [server-implementation-roadmap.md](/C:/Users/EJ/Desktop/Fork/Infinity/docs/server-implementation-roadmap.md)
-3. [mfc-admin-test-client-spec.md](/C:/Users/EJ/Desktop/Fork/Infinity/docs/mfc/mfc-admin-test-client-spec.md)
-4. [mfc-test-client-core.md](/C:/Users/EJ/Desktop/Fork/Infinity/docs/mfc/mfc-test-client-core.md)
-5. [auth_match_schema.sql](/C:/Users/EJ/Desktop/Fork/Infinity/docs/sql/auth_match_schema.sql)
 
 ## 문서별 용도
 - [dedicated-server-auth-architecture.md](/C:/Users/EJ/Desktop/Fork/Infinity/docs/architecture/dedicated-server-auth-architecture.md)
