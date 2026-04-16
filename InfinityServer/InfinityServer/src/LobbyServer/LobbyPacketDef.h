@@ -25,6 +25,8 @@ constexpr uint16_t OP_ROOM_LEAVE_RES    = 0x010A;  // S→C: 퇴장 확인
 constexpr uint16_t OP_PLAYER_READY_REQ  = 0x010B;  // C→S: 준비 상태 토글
 constexpr uint16_t OP_PLAYER_READY_NTFY = 0x010C;  // S→C: 준비 상태 브로드캐스트
 constexpr uint16_t OP_MATCH_START_NTFY  = 0x010D;  // S→C: 게임 시작 — 게임 서버 주소 포함
+constexpr uint16_t OP_CHAT_SEND_REQ    = 0x010E;  // C→S: 채팅 메시지 전송 (방 안에서만 유효)
+constexpr uint16_t OP_CHAT_NTFY        = 0x010F;  // S→C: 채팅 메시지 브로드캐스트 (방 전체)
 
 // ─────────────────────────────────────────────────────
 //  패킷 바디 구조체
@@ -110,6 +112,26 @@ struct MatchStartNtfyBody
     char     game_server_ip[16];
     uint16_t game_server_port;
     char     match_token[64];
+};
+
+// ── 채팅 ──────────────────────────────────────────────
+
+// C→S: 채팅 메시지 전송
+//   - 방에 입장한 상태에서만 유효
+//   - 서버에서 욕설 필터/길이 검증 후 브로드캐스트
+struct ChatSendReqBody
+{
+    char message[128];   // null-terminated UTF-8
+};
+
+// S→C: 채팅 메시지 브로드캐스트 — 방 안 전원에게 전송
+//   - 보낸 사람 포함 전원에게 전송 (자신의 메시지도 서버 경유)
+//   - 클라이언트는 user_id로 자신/상대방 구분
+struct ChatNtfyBody
+{
+    int64_t user_id;      // 발신자 user_id
+    char    nickname[32]; // 발신자 닉네임
+    char    message[128]; // 실제 메시지 (서버 필터 통과 후)
 };
 
 #pragma pack(pop)

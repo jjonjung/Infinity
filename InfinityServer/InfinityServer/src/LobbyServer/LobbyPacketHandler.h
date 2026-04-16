@@ -14,6 +14,7 @@ class LobbySession;
 //    OP_ROOM_JOIN_REQ     (0x0107) — 방 입장
 //    OP_ROOM_LEAVE_REQ    (0x0109) — 방 퇴장
 //    OP_PLAYER_READY_REQ  (0x010B) — 준비 토글 + 전원 준비 시 매치 시작
+//    OP_CHAT_SEND_REQ     (0x010E) — 방 채팅 메시지 전송
 // ─────────────────────────────────────────────────────
 class LobbyPacketHandler
 {
@@ -28,4 +29,5 @@ private:
     static void OnRoomJoinReq     (LobbySession& session, const char* body, uint16_t bodySize);
     static void OnRoomLeaveReq    (LobbySession& session, const char* body, uint16_t bodySize);
     static void OnPlayerReadyReq  (LobbySession& session, const char* body, uint16_t bodySize);
+    static void OnChatSendReq     (LobbySession& session, const char* body, uint16_t bodySize);
 };

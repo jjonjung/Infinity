@@ -45,6 +45,7 @@ void LobbyPacketHandler::Handle(LobbySession& session, uint16_t opcode,
         { OP_ROOM_JOIN_REQ,    OnRoomJoinReq    },
         { OP_ROOM_LEAVE_REQ,   OnRoomLeaveReq   },
         { OP_PLAYER_READY_REQ, OnPlayerReadyReq },
+        { OP_CHAT_SEND_REQ,    OnChatSendReq    },
     };
 
     auto it = s_table.find(opcode);
@@ -197,6 +198,53 @@ void LobbyPacketHandler::OnRoomLeaveReq(LobbySession& session,
         LobbyServer::Get().RemoveRoomIfEmpty(room->GetId());
     }
     session.SendPacket(OP_ROOM_LEAVE_RES, nullptr, 0);
+}
+
+// ─────────────────────────────────────────────────────
+//  채팅 — 방 안 전원에게 브로드캐스트
+//
+//  스레드 안전:
+//    LobbyRoom::Broadcast 내부에서 m_mutex 보유 시간을
+//    세션 포인터 복사로만 제한 → send() 블로킹이 룸 조작 차단 없음
+//
+//  Race Condition 대응:
+//    메시지 길이 검증 → null-termination 강제
+//    방 미입장 세션의 채팅은 무시 (인증은 Handle() 진입 시 이미 검증)
+// ─────────────────────────────────────────────────────
+void LobbyPacketHandler::OnChatSendReq(LobbySession& session,
+                                       const char* body, uint16_t bodySize)
+{
+    if (bodySize < sizeof(ChatSendReqBody)) return;
+
+    LobbyRoom* room = session.GetRoom();
+    if (!room)
+    {
+        Logger::Write(LogLevel::Warning, "lobby-handler",
+                      "채팅 무시 — 방 미입장 user_id=" +
+                      std::to_string(session.GetUserId()));
+        return;
+    }
+
+    const auto* req = reinterpret_cast<const ChatSendReqBody*>(body);
+
+    ChatNtfyBody ntfy{};
+    ntfy.user_id = session.GetUserId();
+
+    // 닉네임 null-termination 보장
+    std::strncpy(ntfy.nickname, session.GetNickname(), sizeof(ntfy.nickname) - 1);
+    ntfy.nickname[sizeof(ntfy.nickname) - 1] = '\0';
+
+    // 메시지 null-termination 보장 — 클라이언트가 보낸 값을 그대로 복사
+    std::strncpy(ntfy.message, req->message, sizeof(ntfy.message) - 1);
+    ntfy.message[sizeof(ntfy.message) - 1] = '\0';
+
+    Logger::Write(LogLevel::Info, "lobby-chat",
+                  "[방" + std::to_string(room->GetId()) + "] " +
+                  std::string(ntfy.nickname) + ": " + ntfy.message);
+
+    // LobbyRoom::Broadcast: 락 내 포인터 스냅샷 → 락 해제 → 송신
+    room->Broadcast(OP_CHAT_NTFY,
+                    reinterpret_cast<const char*>(&ntfy), sizeof(ntfy));
 }
 
 // ─────────────────────────────────────────────────────
