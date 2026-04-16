@@ -72,6 +72,7 @@
 
   ## 기술 핵심
 
+  - 자료구조, AI, 물리, 서버 구조까지 전반을 개선하여 성능(O(n)→O(1)), 안정성(버그 제거), 확장성(구조 분리), 플레이 경험(패턴 다양화)
   - FSM 기반 AI 시스템 설계 및 구현
   - 5상태(Idle / Move / Attack / Damage / Die) 구조로 AI 상태 전환 관리
   - 3가지 이동 패턴(Chaotic / Strafing Jump / Cover + Attack) 순환 구조 구현
@@ -113,28 +114,80 @@
   - 아웃게임 시스템
 
   ## 문제 해결
+---
 
-  ### 1. AI 움직임의 단조로움
+### 자료구조 개선
 
-  - 문제: AI가 항상 일정한 패턴으로 움직여 전투가 쉽게 예측되고 반복적으로 느껴짐
-  - 해결: 4초 주기로 이동 패턴을 자동 전환하는 FSM 구조를 도입하고, Chaotic / Strafing / Cover 패턴을 순환하도록 설계
+<div align="center">
 
-  ### 2. 직선 위주의 기계적인 이동
+| 🚨 Problem | 🧠 Approach | ⚙️ Action | 📊 Result |
+|:--|:--|:--|:--|
+| 킬 로그 문자열 누적 구조 | 로그/통계 분리 필요<br><sub>대안: 문자열 파싱 O(n)</sub> | `TArray + TMap` 분리<br>최근 N개 제한 | ![O1](https://img.shields.io/badge/Time-O(1)-brightgreen)<br>![Memory](https://img.shields.io/badge/Memory-Fixed-blue)<br><sub>Before: 파싱 필요 → After: 즉시 조회</sub> |
+| 시간 스냅샷 로직 혼합 | 책임 분리 구조 필요<br><sub>대안: 단일 함수</sub> | `PushSnapshot` 구조 분리<br>`TDeque` FIFO | ![Stable](https://img.shields.io/badge/Stability-100%25-success)<br><sub>Before: 조건 혼재 → After: 일관 구조</sub> |
 
-  - 문제: 단순 추적 중심 로직으로 인해 AI 움직임이 부자연스럽고 전투 긴장감이 낮음
-  - 해결: `Sin`, `Cos` 기반 복합 삼각함수 조합으로 곡선형 변칙 이동 로직을 구현해 예측 불가능성을 강화
+</div>
 
-  ### 3. AI 시스템 확장성과 유지보수성 부족
+---
 
-  - 문제: 조건문 중심 구조는 패턴 추가와 튜닝이 어렵고 유지보수 비용이 높음
-  - 해결: FSM 상태 분리, DataAsset 기반 수치 외부화, Delegate 기반 이벤트 구조를 적용해 확장성과 재사용성을 확보
+### AI & 플레이 경험 개선
 
-  ## 성과
+<div align="center">
 
-  - AI 활용 모션캡처, 애니메이션, Asset 구현
-  - 물리 적용 전투 Skill 구현
-  - AI 행동 패턴 20가지 이상 조합 가능 구조 확보
-  - 플레이 테스트 만족도 80% 이상 기록
-  - FSM 구조를 통한 유지보수성과 확장성 향상
-  - 수학적 패턴 설계를 통한 전투 다양성 강화
+| 🚨 Problem | 🧠 Approach | ⚙️ Action | 📊 Result |
+|:--|:--|:--|:--|
+| AI 패턴 단일 | FSM 기반 순환 필요<br><sub>대안: 랜덤 이동</sub> | 3패턴 + FSM 조합 | ![Pattern](https://img.shields.io/badge/Pattern-20%2B-blueviolet)<br>![Test](https://img.shields.io/badge/Test-80%25-success)<br><sub>Before: 반복 → After: 다양성</sub> |
+| 직선 이동 AI | 수학 기반 이동 필요<br><sub>대안: NavMesh</sub> | Sin/Cos 곡선 이동 | ![Movement](https://img.shields.io/badge/Movement-Nonlinear-orange)<br><sub>Before: 단순 추적 → After: 예측 어려움</sub> |
+
+</div>
+
+---
+
+### 네트워크 & 아키텍처 개선
+
+<div align="center">
+
+| 🚨 Problem | 🧠 Approach | ⚙️ Action | 📊 Result |
+|:--|:--|:--|:--|
+| 서버 단일 구조 | 역할 분리 필요<br><sub>대안: 통합 서버</sub> | Auth + Game Server 분리 | ![Architecture](https://img.shields.io/badge/Architecture-3Tier-blue)<br><sub>Before: 단일 → After: 계층 분리</sub> |
+| 클라이언트 판정 구조 | 서버 권한 필요<br><sub>대안: 클라 신뢰</sub> | Dedicated Server 판정 구조 | ![Security](https://img.shields.io/badge/Security-ServerAuth-critical)<br><sub>Before: 취약 → After: 안전</sub> |
+
+</div>
+
+---
+
+### 물리 & 충돌 시스템 개선
+
+<div align="center">
+
+| 🚨 Problem | 🧠 Approach | ⚙️ Action | 📊 Result |
+|:--|:--|:--|:--|
+| 충돌 판정 부정확 | 기하 알고리즘 필요<br><sub>대안: 단순 overlap</sub> | Dot / Projection / Sweep 적용 | ![Physics](https://img.shields.io/badge/Physics-Accurate-success)<br><sub>Before: 누락 → After: 안정</sub> |
+
+</div>
+
+---
+
+## 핵심 성과 요약
+
+<div align="center">
+
+![Performance](https://img.shields.io/badge/Performance-O(n)%20→%20O(1)-brightgreen)
+![AI](https://img.shields.io/badge/AI-Pattern%2020%2B-blueviolet)
+![Architecture](https://img.shields.io/badge/Architecture-Server%20Authoritative-critical)
+![Maintainability](https://img.shields.io/badge/Maintainability-High-success)
+
+</div>
+
+- 자료구조 개선 → 성능 최적화 (O(n) → O(1))  
+- FSM + 수학 기반 이동 → 전투 다양성 확보  
+- 서버 권한 구조 → 치트 방지 및 판정 신뢰성 확보  
+- 이벤트 기반 설계 → 유지보수성과 확장성 향상  
+- 물리 기반 전투 스킬 시스템 구현 (충돌, 임펄스, 상호작용 포함)
+- Sin/Cos 기반 이동 로직을 통해 예측 불가능한 전투 패턴 구현
+- FSM 구조 기반으로 유지보수 및 기능 확장 비용 감소
+- AI 활용 모션캡처 및 애니메이션, Asset 적용  
+---
+
+## ✓ 한 줄 요약
+멀티플레이 전투 시스템에서 성능, 구조, 플레이 경험을 동시에 개선한 프로젝트
 
