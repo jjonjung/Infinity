@@ -1,7 +1,7 @@
 @echo off
 setlocal
 
-set NDK_ROOT=C:\Users\EJ\AppData\Local\Android\Sdk\ndk\27.2.12479018
+set NDK_ROOT=C:\Users\EJ\AppData\Local\Android\Sdk\ndk\25.1.8937393
 set JNILIBS=C:\Users\EJ\Desktop\Fork\Infinity\Intermediate\Android\arm64\gradle\app\src\main\jniLibs\arm64-v8a
 set ADB=C:\Users\EJ\AppData\Local\Android\Sdk\platform-tools\adb.exe
 set APK=C:\Users\EJ\Desktop\Fork\Infinity\Intermediate\Android\arm64\gradle\app\build\outputs\apk\debug\app-debug.apk
@@ -14,14 +14,21 @@ if errorlevel 1 ( echo FAILED: copy libc++_shared.so & exit /b 1 )
 echo Done.
 
 echo [2/3] Gradle build...
-call C:\Users\EJ\Desktop\Fork\Infinity\Intermediate\Android\arm64\gradle\gradlew.bat -p C:\Users\EJ\Desktop\Fork\Infinity\Intermediate\Android\arm64\gradle :app:assembleDebug -x ueAFSProjectAssembleDebug -x ueAFSProjectAssembleRelease
+call C:\Users\EJ\Desktop\Fork\Infinity\Intermediate\Android\arm64\gradle\gradlew.bat -p C:\Users\EJ\Desktop\Fork\Infinity\Intermediate\Android\arm64\gradle :app:assembleDebug
 if errorlevel 1 ( echo FAILED: gradle build & exit /b 1 )
 echo Done.
 
-echo [3/3] Installing APK...
+echo [3/4] Installing APK...
 "%ADB%" uninstall com.cej.fighter 2>nul
 "%ADB%" install "%APK%"
 if errorlevel 1 ( echo FAILED: adb install & exit /b 1 )
+echo Done.
+
+echo [4/4] Pushing OBB...
+set OBB=C:\Users\EJ\Desktop\Fork\Infinity\Saved\StagedBuilds\Android_ASTC.obb
+"%ADB%" shell "mkdir -p /storage/emulated/0/Android/obb/com.cej.fighter"
+"%ADB%" push "%OBB%" "/storage/emulated/0/Android/obb/com.cej.fighter/main.1.com.cej.fighter.obb"
+if errorlevel 1 ( echo FAILED: obb push & exit /b 1 )
 echo Done. Launch the app.
 
 endlocal
