@@ -2,6 +2,7 @@
 
 
 #include "Base/CharacterBase.h"
+#include "UI/MobileInputWidget.h"
 #include "ActionBase.h"
 #include "ActionComponent.h"
 #include "DA/ActionLoadOutDA.h"
@@ -237,6 +238,18 @@ void ACharacterBase::BeginPlay()
 					UE_LOG(LogTemp, Error, TEXT("Content Browser에서 BP_Aim의 정확한 경로를 확인하세요."));
 				}
 			}
+
+#if PLATFORM_ANDROID
+			if (InputProxy && !MobileInputWidget)
+			{
+				MobileInputWidget = CreateWidget<UMobileInputWidget>(PC, UMobileInputWidget::StaticClass());
+				if (MobileInputWidget)
+				{
+					MobileInputWidget->Init(InputProxy);
+					MobileInputWidget->AddToViewport(5);
+				}
+			}
+#endif
 		}
 		else
 		{

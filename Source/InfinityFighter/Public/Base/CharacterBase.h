@@ -15,6 +15,8 @@
 
 
 #include "CharacterBase.generated.h"
+
+class UMobileInputWidget;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamaged, float, percent);
 UCLASS(Blueprintable, BlueprintType)
 class INFINITYFIGHTER_API ACharacterBase : public ACharacter
@@ -184,6 +186,9 @@ public:
 	// UI 인스턴스
 	UPROPERTY(EditDefaultsOnly, Category="UI")
 	UUserWidget* crosshairUI;
+
+	UPROPERTY()
+	class UMobileInputWidget* MobileInputWidget = nullptr;
 	// AimEnemy UI 위젯 컴포넌트
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	class UWidgetComponent* AimEnemyWidget;  

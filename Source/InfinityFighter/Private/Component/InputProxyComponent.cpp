@@ -8,6 +8,9 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "InputModifiers.h"
 
 #include "InputActionValue.h"
 #include "Base/CharacterBase.h"
@@ -99,9 +102,68 @@ void UInputProxyComponent::SetupPlayerBindings(UEnhancedInputComponent* EIC)
 	
 }
 
+UInputMappingContext* UInputProxyComponent::BuildRuntimeIMC()
+{
+	UInputMappingContext* IMC = NewObject<UInputMappingContext>(this);
+
+#if PLATFORM_ANDROID
+	// 모바일: 가상 조이스틱 왼쪽 = 이동, 오른쪽 = 시점
+	if (IA_MoveForward)
+	{
+		FEnhancedActionKeyMapping& M = IMC->MapKey(IA_MoveForward, EKeys::Gamepad_LeftY);
+		M.Modifiers.Add(NewObject<UInputModifierDeadZone>(IMC));
+	}
+	if (IA_MoveRight)
+	{
+		FEnhancedActionKeyMapping& M = IMC->MapKey(IA_MoveRight, EKeys::Gamepad_LeftX);
+		M.Modifiers.Add(NewObject<UInputModifierDeadZone>(IMC));
+	}
+	if (IA_Look)
+	{
+		IMC->MapKey(IA_Look, EKeys::Gamepad_RightX);
+		IMC->MapKey(IA_Look, EKeys::Gamepad_RightY);
+	}
+	if (IA_Jump)   { IMC->MapKey(IA_Jump,   EKeys::Gamepad_FaceButton_Bottom); }
+	if (IA_Fire)   { IMC->MapKey(IA_Fire,   EKeys::Gamepad_RightTrigger);      }
+	if (IA_Skill1) { IMC->MapKey(IA_Skill1, EKeys::Gamepad_FaceButton_Right);  }
+	if (IA_Skill2) { IMC->MapKey(IA_Skill2, EKeys::Gamepad_FaceButton_Top);    }
+	if (IA_Dodge)  { IMC->MapKey(IA_Dodge,  EKeys::Gamepad_FaceButton_Left);   }
+	if (IA_Reload) { IMC->MapKey(IA_Reload, EKeys::Gamepad_LeftShoulder);      }
+#else
+	// PC: 키보드 + 마우스
+	if (IA_MoveForward)
+	{
+		IMC->MapKey(IA_MoveForward, EKeys::W);
+		FEnhancedActionKeyMapping& Back = IMC->MapKey(IA_MoveForward, EKeys::S);
+		Back.Modifiers.Add(NewObject<UInputModifierNegate>(IMC));
+	}
+	if (IA_MoveRight)
+	{
+		IMC->MapKey(IA_MoveRight, EKeys::D);
+		FEnhancedActionKeyMapping& Left = IMC->MapKey(IA_MoveRight, EKeys::A);
+		Left.Modifiers.Add(NewObject<UInputModifierNegate>(IMC));
+	}
+	if (IA_Look)   { IMC->MapKey(IA_Look,   EKeys::Mouse2D);  }
+	if (IA_Jump)   { IMC->MapKey(IA_Jump,   EKeys::SpaceBar); }
+	if (IA_Fire)   { IMC->MapKey(IA_Fire,   EKeys::LeftMouseButton); }
+	if (IA_Skill1) { IMC->MapKey(IA_Skill1, EKeys::Q);        }
+	if (IA_Skill2) { IMC->MapKey(IA_Skill2, EKeys::E);        }
+	if (IA_Dodge)  { IMC->MapKey(IA_Dodge,  EKeys::LeftShift);}
+	if (IA_Reload) { IMC->MapKey(IA_Reload, EKeys::R);        }
+#endif
+
+	return IMC;
+}
+
 void UInputProxyComponent::RegisterIMCToLocalPlayer(class APlayerController* PC)
 {
-	if (!PC || !IC_Player) return;
+	if (!PC) return;
+
+	// 에셋이 없으면 런타임 생성
+	if (!IC_Player)
+	{
+		IC_Player = BuildRuntimeIMC();
+	}
 
 	if (ULocalPlayer* LP = PC->GetLocalPlayer())
 	{

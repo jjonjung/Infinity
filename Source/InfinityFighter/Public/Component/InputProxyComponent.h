@@ -74,6 +74,7 @@ public:
 	
 	void SetupPlayerBindings(class UEnhancedInputComponent* EIC);
 	void RegisterIMCToLocalPlayer(class APlayerController* PC);
+	UInputMappingContext* BuildRuntimeIMC();
 
 	UPROPERTY()
 	UCBrainComponent* Brain = nullptr;
